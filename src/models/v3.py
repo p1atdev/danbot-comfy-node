@@ -144,6 +144,7 @@ class V3Model(ModelWrapper):
                 model_name_or_repo_id,
                 torch_dtype=torch.bfloat16,
             )
+            self.model.eval()
         elif model_type == "onnx":
             self.model = ORTModelForCausalLM.from_pretrained(
                 model_name_or_repo_id,
@@ -152,7 +153,6 @@ class V3Model(ModelWrapper):
             )
         else:
             raise ValueError(f"Invalid model type: {model_type}")
-        self.model.eval()
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_name_or_repo_id, trust_remote_code=True
         )

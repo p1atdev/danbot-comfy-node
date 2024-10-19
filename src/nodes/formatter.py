@@ -1,7 +1,5 @@
-from transformers import GenerationConfig
-
 from ..models.utils import ModelWrapper
-from ..models import v2, v3
+from ..models import v1, v2, v3
 
 STRING_OPTIONS = {
     "multiline": True,
@@ -13,10 +11,96 @@ CHARACTER_PLACEHOLDER = "character tags (e.g. hatsune miku, ...)"
 INPUT_TAGS_PLACEHOLDER = "general and meta tags (e.g. 1girl, solo, ...)"
 
 
-class V2FormatterNode:
+class FormatterNodeMixin:
     def __init__(self):
         pass
 
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("formatted_prompt",)
+
+    FUNCTION = "format"
+
+    OUTPUT_NODE = False
+
+    CATEGORY = "prompt/Danbooru Tags Transformer"
+
+
+class V1FormatterNode(FormatterNodeMixin):
+    @classmethod
+    def INPUT_TYPES(s):
+        return {
+            "required": {
+                "model": ("MODEL",),
+                "copyright": (
+                    "STRING",
+                    {
+                        **STRING_OPTIONS,
+                        "placeholder": COPYRIGHT_PLACEHOLDER,
+                    },
+                ),
+                "character": (
+                    "STRING",
+                    {
+                        **STRING_OPTIONS,
+                        "placeholder": CHARACTER_PLACEHOLDER,
+                    },
+                ),
+                "input_tags": (
+                    "STRING",
+                    {
+                        **STRING_OPTIONS,
+                        "placeholder": INPUT_TAGS_PLACEHOLDER,
+                    },
+                ),
+                "rating": (
+                    list(v1.V1_RATING_MAP.keys()),
+                    {
+                        "default": "general",
+                    },
+                ),
+                "length": (
+                    list(v1.V1_LENGTH_MAP.keys()),
+                    {
+                        "default": "long",
+                    },
+                ),
+            },
+        }
+
+    def check_lazy_status(
+        self, model, copyright, character, input_tags, rating, length
+    ):
+        return [
+            "model",
+            "copyright",
+            "character",
+            "input_tags",
+            "rating",
+            "length",
+        ]
+
+    def format(
+        self,
+        model: ModelWrapper,
+        copyright: str,
+        character: str,
+        input_tags: str,
+        rating: str,
+        length: str,
+    ):
+        prompt = model.format_prompt(
+            {
+                "copyright": copyright,
+                "character": character,
+                "condition": input_tags,
+                "rating": v1.V1_RATING_MAP[rating],
+                "length": v1.V1_LENGTH_MAP[length],
+            }
+        )
+        return (prompt,)
+
+
+class V2FormatterNode(FormatterNodeMixin):
     @classmethod
     def INPUT_TYPES(s):
         return {
@@ -70,15 +154,6 @@ class V2FormatterNode:
             },
         }
 
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("formatted_prompt",)
-
-    FUNCTION = "format"
-
-    OUTPUT_NODE = False
-
-    CATEGORY = "prompt/Danbooru Tags Transformer"
-
     def check_lazy_status(
         self,
         model,
@@ -126,10 +201,7 @@ class V2FormatterNode:
         return (prompt,)
 
 
-class V3FormatterNode:
-    def __init__(self):
-        pass
-
+class V3FormatterNode(FormatterNodeMixin):
     @classmethod
     def INPUT_TYPES(s):
         return {
@@ -176,15 +248,6 @@ class V3FormatterNode:
                 ),
             },
         }
-
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("formatted_prompt",)
-
-    FUNCTION = "format"
-
-    OUTPUT_NODE = False
-
-    CATEGORY = "prompt/Danbooru Tags Transformer"
 
     def check_lazy_status(
         self, model, copyright, character, input_tags, aspect_ratio, rating, length

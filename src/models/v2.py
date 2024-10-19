@@ -54,27 +54,27 @@ V2_IDENTITY_MAP = {
 
 PROMPT_TEMPLATE_SFT = (
     "<|bos|>"
-    "{rating}{aspect_ratio}{length}"
     "<copyright>{copyright}</copyright>"
     "<character>{character}</character>"
+    "{rating}{aspect_ratio}{length}"
     "<general>{condition}{identity}<|input_end|>"
 ).strip()
 
 V2_MODELS = {
-    "v2 MoE (eager)": {
+    "v2 MoE sft (eager)": {
         "model_name_or_repo_id": "p1atdev/dart-v2-moe-sft",
         "model_type": "eager",
         "prompt_template": PROMPT_TEMPLATE_SFT,
     },
-    "v2 (eager)": {
+    "v2 sft (eager)": {
         "model_name_or_repo_id": "p1atdev/dart-v2-sft",
         "model_type": "eager",
         "prompt_template": PROMPT_TEMPLATE_SFT,
     },
-    "v2 (quantized onnx)": {
+    "v2 sft (quantized onnx)": {
         "model_name_or_repo_id": "p1atdev/dart-v2-sft",
         "model_type": "onnx",
-        "onnx_model_file": "model_quantized.onnx",
+        "onnx_file_name": "model_quantized.onnx",
         "prompt_template": PROMPT_TEMPLATE_SFT,
     },
 }
@@ -121,6 +121,7 @@ class V2Model(ModelWrapper):
                 model_name_or_repo_id,
                 torch_dtype=torch.bfloat16,
             )
+            self.model.eval()
         elif model_type == "onnx":
             self.model = ORTModelForCausalLM.from_pretrained(
                 model_name_or_repo_id,
@@ -129,7 +130,6 @@ class V2Model(ModelWrapper):
             )
         else:
             raise ValueError(f"Invalid model type: {model_type}")
-        self.model.eval()
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_name_or_repo_id, trust_remote_code=True
         )

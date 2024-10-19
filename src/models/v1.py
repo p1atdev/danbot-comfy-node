@@ -9,55 +9,53 @@ from transformers import (
     AutoTokenizer,
     OPTForCausalLM,
     PreTrainedTokenizerBase,
-    PreTrainedModel,
-    BatchEncoding,
     GenerationConfig,
 )
 from optimum.onnxruntime.modeling_decoder import ORTModelForCausalLM
 
-V1_MODELS = {
-    "v1 (eager)": {
-        "model": "p1atdev/dart-v1-sft",
-        "model_type": "eager",
-    },
-    "v1 (onnx)": {
-        "model": "p1atdev/dart-v1-sft",
-        "model_type": "onnx",
-        "onnx_model_file": "model.onnx",
-    },
-    "v1 (quantized onnx)": {
-        "model": "p1atdev/dart-v1-sft",
-        "model_type": "onnx",
-        "onnx_model_file": "model_quantized.onnx",
-    },
+
+V1_RATING_MAP = {
+    "general": "rating:sfw, rating:general",
+    "sensitive": "rating:sfw, rating:sensitive",
+    "questionable": "rating:nsfw, rating:questionable",
+    "explicit": "rating:nsfw, rating:explicit",
 }
 
-V1_FORMAT_CHOICES = {
-    "rating": ["general", "sensitive", "questionable", "explicit"],
-    "length": ["very_short", "short", "long", "very_long"],
+V1_LENGTH_MAP = {
+    "very_short": "<|very_short|>",
+    "short": "<|short|>",
+    "long": "<|long|>",
+    "very_long": "<|very_long|>",
 }
-V1_FORM = {
-    "copyright": (
-        "STRING",
-        {
-            "default": "",
-            "placeholder": "Copyright tags (vocaloid, ...)",
-        },
-    ),
-    "character": (
-        "STRING",
-        {
-            "default": "",
-            "placeholder": "Character tags (hatsune miku, ...)",
-        },
-    ),
-    "general": (
-        "STRING",
-        {
-            "default": "",
-            "placeholder": "General tags (1girl, solo, ...)",
-        },
-    ),
+
+
+PROMPT_TEMPLATE_SFT = (
+    "<|bos|>"
+    "<rating>{rating}</rating>"
+    "<copyright>{copyright}</copyright>"
+    "<character>{character}</character>"
+    "{length}"
+    "<general>{condition}<|input_end|>"
+).strip()
+
+V1_MODELS = {
+    "v1 sft (eager)": {
+        "model_name_or_repo_id": "p1atdev/dart-v1-sft",
+        "model_type": "eager",
+        "prompt_template": PROMPT_TEMPLATE_SFT,
+    },
+    "v1 sft (onnx)": {
+        "model_name_or_repo_id": "p1atdev/dart-v1-sft",
+        "model_type": "onnx",
+        "onnx_file_name": "model.onnx",
+        "prompt_template": PROMPT_TEMPLATE_SFT,
+    },
+    "v1 sft (quantized onnx)": {
+        "model_name_or_repo_id": "p1atdev/dart-v1-sft",
+        "model_type": "onnx",
+        "onnx_file_name": "model_quantized.onnx",
+        "prompt_template": PROMPT_TEMPLATE_SFT,
+    },
 }
 
 
@@ -67,17 +65,21 @@ class V1Model(ModelWrapper):
     model: OPTForCausalLM | ORTModelForCausalLM
     tokenizer: PreTrainedTokenizerBase
 
+    prompt_template: str = PROMPT_TEMPLATE_SFT
+
     def __init__(
         self,
         model_name_or_repo_id: str,
         model_type: MODEL_TYPE = "eager",
         onnx_file_name: str | None = None,
+        prompt_template: str = PROMPT_TEMPLATE_SFT,
     ):
         if model_type == "eager":
             self.model = AutoModelForCausalLM.from_pretrained(
                 model_name_or_repo_id,
                 torch_dtype=torch.bfloat16,
             )
+            self.model.eval()
         elif model_type == "onnx":
             self.model = ORTModelForCausalLM.from_pretrained(
                 model_name_or_repo_id,
@@ -86,28 +88,31 @@ class V1Model(ModelWrapper):
             )
         else:
             raise ValueError(f"Invalid model type: {model_type}")
-        self.model.eval()
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_name_or_repo_id, trust_remote_code=True
         )
+        self.prompt_template = prompt_template
 
-    def compose_prompt(self, format_kwargs: dict[str, str]) -> BatchEncoding:
-        encoded: BatchEncoding = self.tokenizer.apply_chat_template(
-            format_kwargs,  # type: ignore
-            return_tensors="pt",
-            tokenize=True,
-        )
-        return encoded
+    def format_prompt(self, format_kwargs: dict[str, str]) -> str:
+        return self.prompt_template.format(**format_kwargs)
 
     @torch.inference_mode()
     def generate(
-        self, input_ids: torch.Tensor, generation_config: GenerationConfig
-    ) -> torch.LongTensor:
-        outputs = self.model.generate(input_ids, generation_config=generation_config)
-        return outputs
+        self,
+        prompt: str,
+        generation_config: GenerationConfig,
+        **kwargs,
+    ) -> str:
+        input_ids = self.tokenizer(prompt, return_tensors="pt").input_ids
+        output_ids = self.model.generate(
+            input_ids, generation_config=generation_config
+        )[0]
+        output = self.decode_ids(output_ids)
+
+        return output
 
     def decode_ids(
         self,
-        generated_ids: torch.LongTensor,
+        generated_ids: torch.Tensor,
     ) -> str:
         return self.tokenizer.decode(generated_ids, skip_special_tokens=True)
