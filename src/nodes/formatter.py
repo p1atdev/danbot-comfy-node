@@ -6,9 +6,21 @@ STRING_OPTIONS = {
     "multiline": True,
 }
 
-COPYRIGHT_PLACEHOLDER = "copyright tags (e.g. vocaloid, ...)"
-CHARACTER_PLACEHOLDER = "character tags (e.g. hatsune miku, ...)"
-INPUT_TAGS_PLACEHOLDER = "general and meta tags (e.g. 1girl, solo, ...)"
+COPYRIGHT_OPTIONS = {
+    **STRING_OPTIONS,
+    "placeholder": "copyright tags (e.g. vocaloid, ...)",
+    "tooltip": "Comma separated tags that are categorized as copyright in danbooru",
+}
+CHARACTER_OPTIONS = {
+    **STRING_OPTIONS,
+    "placeholder": "character tags (e.g. hatsune miku, ...)",
+    "tooltip": "Comma separated tags that are categorized as character in danbooru",
+}
+INPUT_TAGS_OPTIONS = {
+    **STRING_OPTIONS,
+    "placeholder": "general tags (e.g. 1girl, solo, ...)",
+    "tooltip": "Comma separated tags. This will be the condition for upsampling tags. copyright/character tags in this field will be automatically detected the and merged",
+}
 
 
 class FormatterNodeMixin:
@@ -46,22 +58,19 @@ class V1FormatterNode(FormatterNodeMixin):
                 "copyright": (
                     "STRING",
                     {
-                        **STRING_OPTIONS,
-                        "placeholder": COPYRIGHT_PLACEHOLDER,
+                        **COPYRIGHT_OPTIONS,
                     },
                 ),
                 "character": (
                     "STRING",
                     {
-                        **STRING_OPTIONS,
-                        "placeholder": CHARACTER_PLACEHOLDER,
+                        **CHARACTER_OPTIONS,
                     },
                 ),
                 "input_tags": (
                     "STRING",
                     {
-                        **STRING_OPTIONS,
-                        "placeholder": INPUT_TAGS_PLACEHOLDER,
+                        **INPUT_TAGS_OPTIONS,
                     },
                 ),
             },
@@ -129,22 +138,19 @@ class V2FormatterNode(FormatterNodeMixin):
                 "copyright": (
                     "STRING",
                     {
-                        **STRING_OPTIONS,
-                        "placeholder": COPYRIGHT_PLACEHOLDER,
+                        **COPYRIGHT_OPTIONS,
                     },
                 ),
                 "character": (
                     "STRING",
                     {
-                        **STRING_OPTIONS,
-                        "placeholder": CHARACTER_PLACEHOLDER,
+                        **CHARACTER_OPTIONS,
                     },
                 ),
                 "input_tags": (
                     "STRING",
                     {
-                        **STRING_OPTIONS,
-                        "placeholder": INPUT_TAGS_PLACEHOLDER,
+                        **INPUT_TAGS_OPTIONS,
                     },
                 ),
             },
@@ -210,22 +216,20 @@ class V3FormatterNode(FormatterNodeMixin):
                 "copyright": (
                     "STRING",
                     {
-                        **STRING_OPTIONS,
-                        "placeholder": COPYRIGHT_PLACEHOLDER,
+                        **COPYRIGHT_OPTIONS,
                     },
                 ),
                 "character": (
                     "STRING",
                     {
-                        **STRING_OPTIONS,
-                        "placeholder": CHARACTER_PLACEHOLDER,
+                        **CHARACTER_OPTIONS,
                     },
                 ),
                 "input_tags": (
                     "STRING",
                     {
-                        **STRING_OPTIONS,
-                        "placeholder": INPUT_TAGS_PLACEHOLDER,
+                        **INPUT_TAGS_OPTIONS,
+                        "placeholder": "general and meta tags (e.g. 1girl, solo, ...)",
                     },
                 ),
             },

@@ -21,13 +21,14 @@ class GenerationConfigNode:
                         "max": 512,
                         "step": 1,
                         "display": "number",
-                        "lazy": True,
+                        "tooltip": "Maximum number of tokens to generate",
                     },
                 ),
                 "do_sample": (
                     ["true", "false"],
                     {
                         "default": "true",
+                        "tooltip": "Whether to use sampling or greedy decoding",
                     },
                 ),
                 "temperature": (
@@ -38,7 +39,7 @@ class GenerationConfigNode:
                         "max": 5.0,
                         "step": 0.05,
                         "display": "number",
-                        "lazy": True,
+                        "tooltip": "Temperature for sampling. Lower values are more deterministic, higher values more random",
                     },
                 ),
                 "top_p": (
@@ -49,7 +50,7 @@ class GenerationConfigNode:
                         "max": 1.0,
                         "step": 0.1,
                         "display": "number",
-                        "lazy": True,
+                        "tooltip": "Tokens are sampled from the smallest set whose cumulative probability exceeds the probability p",
                     },
                 ),
                 "top_k": (
@@ -60,7 +61,7 @@ class GenerationConfigNode:
                         "max": 1000,
                         "step": 10,
                         "display": "number",
-                        "lazy": True,
+                        "tooltip": "Tokens are sampled from the top k most likely tokens",
                     },
                 ),
                 "num_beams": (
@@ -71,16 +72,7 @@ class GenerationConfigNode:
                         "max": 10,
                         "step": 1,
                         "display": "number",
-                        "lazy": True,
-                    },
-                ),
-                "seed": (
-                    "INT",
-                    {
-                        "default": 0,
-                        "step": 1,
-                        "display": "number",
-                        "lazy": True,
+                        "tooltip": "Number of beams to use for beam search. 1 means no beam search. It is effective when the temperature is high",
                     },
                 ),
             },
@@ -103,7 +95,6 @@ class GenerationConfigNode:
         top_p: float,
         top_k: int,
         num_beams: int,
-        seed: int,  # comfyui backend does the all about seed in nice way
     ):
         config = GenerationConfig(
             max_new_tokens=max_new_tokens,
