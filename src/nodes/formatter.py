@@ -3,7 +3,6 @@ from ..models import v1, v2, v3
 
 STRING_OPTIONS = {
     "multiline": True,
-    "lazy": True,
 }
 
 COPYRIGHT_PLACEHOLDER = "copyright tags (e.g. vocaloid, ...)"
@@ -66,18 +65,6 @@ class V1FormatterNode(FormatterNodeMixin):
                 ),
             },
         }
-
-    def check_lazy_status(
-        self, model, copyright, character, input_tags, rating, length
-    ):
-        return [
-            "model",
-            "copyright",
-            "character",
-            "input_tags",
-            "rating",
-            "length",
-        ]
 
     def format(
         self,
@@ -154,28 +141,6 @@ class V2FormatterNode(FormatterNodeMixin):
             },
         }
 
-    def check_lazy_status(
-        self,
-        model,
-        copyright,
-        character,
-        input_tags,
-        aspect_ratio,
-        rating,
-        length,
-        identity,
-    ):
-        return [
-            "model",
-            "copyright",
-            "character",
-            "input_tags",
-            "aspect_ratio",
-            "rating",
-            "length",
-            "identity",
-        ]
-
     def format(
         self,
         model: ModelWrapper,
@@ -248,19 +213,6 @@ class V3FormatterNode(FormatterNodeMixin):
                 ),
             },
         }
-
-    def check_lazy_status(
-        self, model, copyright, character, input_tags, aspect_ratio, rating, length
-    ):
-        return [
-            "model",
-            "copyright",
-            "character",
-            "input_tags",
-            "aspect_ratio",
-            "rating",
-            "length",
-        ]
 
     def format(
         self,

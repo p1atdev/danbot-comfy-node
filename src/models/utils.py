@@ -4,11 +4,15 @@ from typing import Literal
 
 from transformers import GenerationConfig
 
+MODEL_VERSIONS = Literal["v1", "v2", "v3"]
+
 
 class ModelWrapper(ABC):
     """
     Wrapper class for dart models
     """
+
+    version: MODEL_VERSIONS
 
     @abstractmethod
     def __init__(self, **kwargs):

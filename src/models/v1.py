@@ -60,6 +60,8 @@ V1_MODELS = {
 
 
 class V1Model(ModelWrapper):
+    version = "v1"
+
     MODEL_TYPE = Literal["eager", "onnx"]
 
     model: OPTForCausalLM | ORTModelForCausalLM

@@ -94,26 +94,6 @@ class GenerationConfigNode:
 
     CATEGORY = "prompt/Danbooru Tags Transformer"
 
-    def check_lazy_status(
-        self,
-        max_new_tokens,
-        do_sample,
-        temperature,
-        top_p,
-        top_k,
-        num_beams,
-        seed,
-    ):
-        return [
-            "max_new_tokens",
-            "do_sample",
-            "temperature",
-            "top_p",
-            "top_k",
-            "num_beams",
-            "seed",
-        ]
-
     def construct(
         self,
         max_new_tokens: int,

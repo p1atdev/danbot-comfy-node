@@ -125,6 +125,8 @@ def aspect_ratio_tag(
 
 
 class V3Model(ModelWrapper):
+    version = "v3"
+
     MODEL_TYPE = Literal["eager", "onnx"]
 
     model: MistralForCausalLM | ORTModelForCausalLM

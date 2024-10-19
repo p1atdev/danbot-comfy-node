@@ -22,9 +22,6 @@ class LoadModelNode:
 
     CATEGORY = "prompt/Danbooru Tags Transformer"
 
-    def check_lazy_status(self, model_name):
-        return ["model_name"]
-
     def load_model(self, model_name: str):
         model_cls, config = ALL_MODELS[model_name]
         model = model_cls(**config)

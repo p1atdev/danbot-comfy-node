@@ -44,16 +44,6 @@ class AutoAspectRatioTagNodeMixin(ABC):
 
     CATEGORY = "prompt/Danbooru Tags Transformer"
 
-    def check_lazy_status(
-        self,
-        width,
-        height,
-    ):
-        return [
-            "width",
-            "height",
-        ]
-
     @abstractmethod
     def calculate_aspect_ratio_tag(
         self,

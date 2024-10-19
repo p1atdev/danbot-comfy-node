@@ -19,9 +19,6 @@ class PrintStringNode:
     CATEGORY = "prompt/Danbooru Tags Transformer/utils"
     DESCRIPTION = "Prints the input string to the console."
 
-    def check_lazy_status(self, input_string):
-        return []
-
     def print_string(self, input_string=None):
         if input_string is not None:
             print("input_string:", input_string)
