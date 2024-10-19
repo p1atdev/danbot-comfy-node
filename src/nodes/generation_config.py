@@ -122,7 +122,7 @@ class GenerationConfigNode:
         top_p: float,
         top_k: int,
         num_beams: int,
-        seed: int,
+        seed: int,  # comfyui backend does the all about seed in nice way
     ):
         config = GenerationConfig(
             max_new_tokens=max_new_tokens,
