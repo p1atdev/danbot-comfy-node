@@ -16,7 +16,6 @@ class UpsamplerNode:
                 "formatted_prompt": (
                     "STRING",
                     {
-                        "lazy": True,
                         "forceInput": True,
                         "tooltip": "Formatted prompt that will be passed to the dart model to upsample tags",
                     },
@@ -33,9 +32,8 @@ class UpsamplerNode:
                         "default": 0,
                         "step": 1,
                         "min": 0,
-                        "max": 0xFFFFFFFFFFFFFFFF,
+                        "max": 2**32 - 1,
                         "display": "number",
-                        "lazy": True,
                     },
                 ),
             },
