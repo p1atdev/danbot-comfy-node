@@ -167,7 +167,7 @@ class V3Model(ModelWrapper):
         prompt: str,
         generation_config: GenerationConfig,
         **kwargs,
-    ) -> torch.LongTensor:
+    ) -> str:
         input_ids = self.tokenizer(prompt, return_tensors="pt").input_ids
         output_ids = self.model.generate(
             input_ids, generation_config=generation_config

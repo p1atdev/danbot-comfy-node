@@ -15,7 +15,9 @@ class ModelWrapper(ABC):
         pass
 
     @abstractmethod
-    def generate(self, prompt: str, generation_config: GenerationConfig, **kwargs):
+    def generate(
+        self, prompt: str, generation_config: GenerationConfig, **kwargs
+    ) -> str:
         pass
 
     @abstractmethod
