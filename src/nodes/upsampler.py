@@ -1,6 +1,7 @@
 from transformers import GenerationConfig
 
 from ..models.utils import ModelWrapper
+from .type import DART_MODEL_TYPE, DART_GENERATION_CONFIG_TYPE
 
 
 class UpsamplerNode:
@@ -11,7 +12,7 @@ class UpsamplerNode:
     def INPUT_TYPES(s):
         return {
             "required": {
-                "dart_model": ("MODEL",),
+                "dart_model": (DART_MODEL_TYPE,),
                 "formatted_prompt": (
                     "STRING",
                     {
@@ -19,7 +20,7 @@ class UpsamplerNode:
                         "forceInput": True,
                     },
                 ),
-                "generation_config": ("MODEL",),
+                "generation_config": (DART_GENERATION_CONFIG_TYPE,),
             },
         }
 

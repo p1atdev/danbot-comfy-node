@@ -1,7 +1,8 @@
 from typing import Literal
 
-
 from transformers import GenerationConfig
+
+from .type import DART_GENERATION_CONFIG_TYPE
 
 
 class GenerationConfigNode:
@@ -85,7 +86,7 @@ class GenerationConfigNode:
             },
         }
 
-    RETURN_TYPES = ("MODEL",)
+    RETURN_TYPES = (DART_GENERATION_CONFIG_TYPE,)
     RETURN_NAMES = ("generation_config",)
 
     FUNCTION = "construct"

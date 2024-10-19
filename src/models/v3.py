@@ -3,19 +3,19 @@ import math
 
 import torch
 
-from .utils import ModelWrapper
-
-
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
     MistralForCausalLM,
     PreTrainedTokenizerBase,
-    PreTrainedModel,
-    BatchEncoding,
     GenerationConfig,
 )
 from optimum.onnxruntime.modeling_decoder import ORTModelForCausalLM
+
+from .utils import (
+    ModelWrapper,
+    TAGS_ROOT_DIR,
+)
 
 V3_RATING_MAP = {
     "general": "<|rating:general|>",
@@ -126,6 +126,9 @@ def aspect_ratio_tag(
 
 class V3Model(ModelWrapper):
     version = "v3"
+
+    copyright_tags_path = TAGS_ROOT_DIR / "v3" / "copyright.txt"
+    character_tags_path = TAGS_ROOT_DIR / "v3" / "character.txt"
 
     MODEL_TYPE = Literal["eager", "onnx"]
 

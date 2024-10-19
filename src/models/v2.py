@@ -3,9 +3,6 @@ import math
 
 import torch
 
-from .utils import ModelWrapper
-
-
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
@@ -17,6 +14,10 @@ from transformers import (
 )
 from optimum.onnxruntime.modeling_decoder import ORTModelForCausalLM
 
+from .utils import (
+    ModelWrapper,
+    TAGS_ROOT_DIR,
+)
 
 V2_RATING_MAP = {
     "sfw": "<|rating:sfw|>",
@@ -78,6 +79,9 @@ V2_MODELS = {
         "prompt_template": PROMPT_TEMPLATE_SFT,
     },
 }
+
+V2_COPYRIGHT_TAGS_PATH = TAGS_ROOT_DIR / "v2" / "copyright.txt"
+V2_CHARACTER_TAGS_PATH = TAGS_ROOT_DIR / "v2" / "character.txt"
 
 
 def aspect_ratio_tag(

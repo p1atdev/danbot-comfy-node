@@ -1,0 +1,4 @@
+# comfyui node input/output types
+
+DART_MODEL_TYPE = "DART_MODEL"
+DART_GENERATION_CONFIG_TYPE = "DART_GENERATION_CONFIG"

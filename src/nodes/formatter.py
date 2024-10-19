@@ -1,5 +1,6 @@
-from ..models.utils import ModelWrapper
+from ..models.utils import ModelWrapper, normalize_tag_text
 from ..models import v1, v2, v3
+from .type import DART_MODEL_TYPE
 
 STRING_OPTIONS = {
     "multiline": True,
@@ -29,7 +30,19 @@ class V1FormatterNode(FormatterNodeMixin):
     def INPUT_TYPES(s):
         return {
             "required": {
-                "model": ("MODEL",),
+                "model": (DART_MODEL_TYPE,),
+                "rating": (
+                    ["auto"] + list(v1.V1_RATING_MAP.keys()),
+                    {
+                        "default": "general",
+                    },
+                ),
+                "length": (
+                    list(v1.V1_LENGTH_MAP.keys()),
+                    {
+                        "default": "long",
+                    },
+                ),
                 "copyright": (
                     "STRING",
                     {
@@ -51,36 +64,32 @@ class V1FormatterNode(FormatterNodeMixin):
                         "placeholder": INPUT_TAGS_PLACEHOLDER,
                     },
                 ),
-                "rating": (
-                    list(v1.V1_RATING_MAP.keys()),
-                    {
-                        "default": "general",
-                    },
-                ),
-                "length": (
-                    list(v1.V1_LENGTH_MAP.keys()),
-                    {
-                        "default": "long",
-                    },
-                ),
             },
         }
 
     def format(
         self,
         model: ModelWrapper,
+        rating: str,
+        length: str,
         copyright: str,
         character: str,
         input_tags: str,
-        rating: str,
-        length: str,
     ):
+        parsed = model.parse_prompt(input_tags, escape_brackets=False)
+
+        copyright_tags = normalize_tag_text(", ".join([copyright, parsed.copyright]))
+        character_tags = normalize_tag_text(", ".join([character, parsed.character]))
+        condition_tags = parsed.known
+
+        rating_tag = v1.V1_RATING_MAP[parsed.rating if rating == "auto" else rating]
+
         prompt = model.format_prompt(
             {
-                "copyright": copyright,
-                "character": character,
-                "condition": input_tags,
-                "rating": v1.V1_RATING_MAP[rating],
+                "copyright": copyright_tags,
+                "character": character_tags,
+                "condition": condition_tags,
+                "rating": rating_tag,
                 "length": v1.V1_LENGTH_MAP[length],
             }
         )
@@ -92,28 +101,7 @@ class V2FormatterNode(FormatterNodeMixin):
     def INPUT_TYPES(s):
         return {
             "required": {
-                "model": ("MODEL",),
-                "copyright": (
-                    "STRING",
-                    {
-                        **STRING_OPTIONS,
-                        "placeholder": COPYRIGHT_PLACEHOLDER,
-                    },
-                ),
-                "character": (
-                    "STRING",
-                    {
-                        **STRING_OPTIONS,
-                        "placeholder": CHARACTER_PLACEHOLDER,
-                    },
-                ),
-                "input_tags": (
-                    "STRING",
-                    {
-                        **STRING_OPTIONS,
-                        "placeholder": INPUT_TAGS_PLACEHOLDER,
-                    },
-                ),
+                "model": (DART_MODEL_TYPE,),
                 "aspect_ratio": (
                     list(v2.V2_ASPECT_RATIO_MAP.keys()),
                     {
@@ -121,7 +109,7 @@ class V2FormatterNode(FormatterNodeMixin):
                     },
                 ),
                 "rating": (
-                    list(v2.V2_RATING_MAP.keys()),
+                    ["auto"] + list(v2.V2_RATING_MAP.keys()),
                     {
                         "default": "general",
                     },
@@ -138,40 +126,6 @@ class V2FormatterNode(FormatterNodeMixin):
                         "default": "none",
                     },
                 ),
-            },
-        }
-
-    def format(
-        self,
-        model: ModelWrapper,
-        copyright: str,
-        character: str,
-        input_tags: str,
-        aspect_ratio: str,
-        rating: str,
-        length: str,
-        identity: str,
-    ):
-        prompt = model.format_prompt(
-            {
-                "copyright": copyright,
-                "character": character,
-                "condition": input_tags,
-                "aspect_ratio": v2.V2_ASPECT_RATIO_MAP[aspect_ratio],
-                "rating": v2.V2_RATING_MAP[rating],
-                "length": v2.V2_LENGTH_MAP[length],
-                "identity": v2.V2_IDENTITY_MAP[identity],
-            }
-        )
-        return (prompt,)
-
-
-class V3FormatterNode(FormatterNodeMixin):
-    @classmethod
-    def INPUT_TYPES(s):
-        return {
-            "required": {
-                "model": ("MODEL",),
                 "copyright": (
                     "STRING",
                     {
@@ -193,6 +147,48 @@ class V3FormatterNode(FormatterNodeMixin):
                         "placeholder": INPUT_TAGS_PLACEHOLDER,
                     },
                 ),
+            },
+        }
+
+    def format(
+        self,
+        model: ModelWrapper,
+        aspect_ratio: str,
+        rating: str,
+        length: str,
+        identity: str,
+        copyright: str,
+        character: str,
+        input_tags: str,
+    ):
+        parsed = model.parse_prompt(input_tags, escape_brackets=False)
+
+        copyright_tags = normalize_tag_text(", ".join([copyright, parsed.copyright]))
+        character_tags = normalize_tag_text(", ".join([character, parsed.character]))
+        condition_tags = parsed.known
+
+        rating_tag = v2.V2_RATING_MAP[parsed.rating if rating == "auto" else rating]
+
+        prompt = model.format_prompt(
+            {
+                "copyright": copyright_tags,
+                "character": character_tags,
+                "condition": condition_tags,
+                "aspect_ratio": v2.V2_ASPECT_RATIO_MAP[aspect_ratio],
+                "rating": rating_tag,
+                "length": v2.V2_LENGTH_MAP[length],
+                "identity": v2.V2_IDENTITY_MAP[identity],
+            }
+        )
+        return (prompt,)
+
+
+class V3FormatterNode(FormatterNodeMixin):
+    @classmethod
+    def INPUT_TYPES(s):
+        return {
+            "required": {
+                "model": (DART_MODEL_TYPE,),
                 "aspect_ratio": (
                     list(v3.V3_ASPECT_RATIO_MAP.keys()),
                     {
@@ -200,7 +196,7 @@ class V3FormatterNode(FormatterNodeMixin):
                     },
                 ),
                 "rating": (
-                    list(v3.V3_RATING_MAP.keys()),
+                    ["auto"] + list(v3.V3_RATING_MAP.keys()),
                     {
                         "default": "general",
                     },
@@ -211,26 +207,55 @@ class V3FormatterNode(FormatterNodeMixin):
                         "default": "medium",
                     },
                 ),
+                "copyright": (
+                    "STRING",
+                    {
+                        **STRING_OPTIONS,
+                        "placeholder": COPYRIGHT_PLACEHOLDER,
+                    },
+                ),
+                "character": (
+                    "STRING",
+                    {
+                        **STRING_OPTIONS,
+                        "placeholder": CHARACTER_PLACEHOLDER,
+                    },
+                ),
+                "input_tags": (
+                    "STRING",
+                    {
+                        **STRING_OPTIONS,
+                        "placeholder": INPUT_TAGS_PLACEHOLDER,
+                    },
+                ),
             },
         }
 
     def format(
         self,
         model: ModelWrapper,
-        copyright: str,
-        character: str,
-        input_tags: str,
         aspect_ratio: str,
         rating: str,
         length: str,
+        copyright: str,
+        character: str,
+        input_tags: str,
     ):
+        parsed = model.parse_prompt(input_tags, escape_brackets=False)
+
+        copyright_tags = normalize_tag_text(", ".join([copyright, parsed.copyright]))
+        character_tags = normalize_tag_text(", ".join([character, parsed.character]))
+        condition_tags = parsed.known
+
+        rating_tag = v3.V3_RATING_MAP[parsed.rating if rating == "auto" else rating]
+
         prompt = model.format_prompt(
             {
-                "copyright": copyright,
-                "character": character,
-                "condition": input_tags,
+                "copyright": copyright_tags,
+                "character": character_tags,
+                "condition": condition_tags,
                 "aspect_ratio": v3.V3_ASPECT_RATIO_MAP[aspect_ratio],
-                "rating": v3.V3_RATING_MAP[rating],
+                "rating": rating_tag,
                 "length": v3.V3_LENGTH_MAP[length],
             }
         )

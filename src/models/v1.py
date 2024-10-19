@@ -1,6 +1,5 @@
 from typing import Literal
-
-from .utils import ModelWrapper
+import logging
 
 import torch
 
@@ -13,6 +12,10 @@ from transformers import (
 )
 from optimum.onnxruntime.modeling_decoder import ORTModelForCausalLM
 
+from .utils import (
+    ModelWrapper,
+    TAGS_ROOT_DIR,
+)
 
 V1_RATING_MAP = {
     "general": "rating:sfw, rating:general",
@@ -58,9 +61,15 @@ V1_MODELS = {
     },
 }
 
+V1_COPYRIGHT_TAGS_PATH = TAGS_ROOT_DIR / "v1" / "copyright.txt"
+V1_CHARACTER_TAGS_PATH = TAGS_ROOT_DIR / "v1" / "character.txt"
+
 
 class V1Model(ModelWrapper):
     version = "v1"
+
+    copyright_tags_path = V1_COPYRIGHT_TAGS_PATH
+    character_tags_path = V1_CHARACTER_TAGS_PATH
 
     MODEL_TYPE = Literal["eager", "onnx"]
 

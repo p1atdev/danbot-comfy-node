@@ -1,4 +1,5 @@
 from ..models import ALL_MODELS
+from .type import DART_MODEL_TYPE
 
 
 class LoadModelNode:
@@ -13,7 +14,7 @@ class LoadModelNode:
             },
         }
 
-    RETURN_TYPES = ("MODEL",)
+    RETURN_TYPES = (DART_MODEL_TYPE,)
     RETURN_NAMES = ("dart_model",)
 
     FUNCTION = "load_model"
