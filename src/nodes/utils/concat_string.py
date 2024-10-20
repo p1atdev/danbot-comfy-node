@@ -23,5 +23,6 @@ class ConcatStringNode:
 
     def concat(self, string_former: str, string_latter: str, separator: str = ", "):
         strings = [string_former, string_latter]
+        strings = [string.strip() for string in strings if string.strip()]
         result = separator.join(strings)
         return (result,)
