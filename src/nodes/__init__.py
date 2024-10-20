@@ -6,3 +6,4 @@ from .formatter import V1FormatterNode, V2FormatterNode, V3FormatterNode
 
 from .utils.print_string import PrintStringNode
 from .utils.concat_string import ConcatStringNode
+from .utils.escape_brackets import EscapeBracketsNode

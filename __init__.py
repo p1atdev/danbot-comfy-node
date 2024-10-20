@@ -14,6 +14,7 @@ NODE_CLASS_MAPPINGS = {
     #
     "DartUtilsPrintString": nodes.PrintStringNode,
     "DartUtilsConcatString": nodes.ConcatStringNode,
+    "DartUtilsEscapeBrackets": nodes.EscapeBracketsNode,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -31,6 +32,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     #
     "DartUtilsPrintString": "Dart Print String",
     "DartUtilsConcatString": "Dart Concat String",
+    "DartUtilsEscapeBrackets": "Dart Escape Brackets",
 }
 
 WEB_DIRECTORY = "./src/js"
