@@ -108,6 +108,9 @@ def aspect_ratio_tag(
 class V2Model(ModelWrapper):
     version = "v2"
 
+    copyright_tags_path = V2_COPYRIGHT_TAGS_PATH
+    character_tags_path = V2_CHARACTER_TAGS_PATH
+
     MODEL_TYPE = Literal["eager", "onnx"]
 
     model: MistralForCausalLM | ORTModelForCausalLM
@@ -150,18 +153,21 @@ class V2Model(ModelWrapper):
         prompt: str,
         generation_config: GenerationConfig,
         **kwargs,
-    ) -> str:
+    ) -> tuple[str, str, str]:
         input_ids = self.tokenizer(prompt, return_tensors="pt").input_ids
         output_ids = self.model.generate(
             input_ids, generation_config=generation_config
         )[0]  # take the first sequence
-        output = self.decode_ids(output_ids)
+        output_full = self.decode_ids(output_ids)
+        output_new = output_full[len(input_ids[0]) :]
+        output_raw = self.decode_ids(output_ids, skip_special_tokens=False)
 
-        return output
+        return (output_full, output_new, output_raw)
 
     def decode_ids(
         self,
         generated_ids: torch.Tensor,  # (token_length,)
+        skip_special_tokens: bool = True,
     ) -> str:
         # (token_length,) -> (token_length, 1)
         generated_ids = generated_ids.unsqueeze(1)
@@ -170,7 +176,7 @@ class V2Model(ModelWrapper):
             [
                 token
                 for token in self.tokenizer.batch_decode(
-                    generated_ids, skip_special_tokens=True
+                    generated_ids, skip_special_tokens=skip_special_tokens
                 )
                 if token.strip() != ""
             ]

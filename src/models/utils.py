@@ -52,7 +52,7 @@ class ModelWrapper(ABC):
     @abstractmethod
     def generate(
         self, prompt: str, generation_config: GenerationConfig, **kwargs
-    ) -> str:
+    ) -> tuple[str, str, str]:
         raise NotImplementedError
 
     @abstractmethod

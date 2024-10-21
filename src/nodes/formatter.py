@@ -27,8 +27,8 @@ class FormatterNodeMixin:
     def __init__(self):
         pass
 
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("formatted_prompt",)
+    RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING")
+    RETURN_NAMES = ("formatted_prompt", "copyright", "character", "input_tags")
 
     FUNCTION = "format"
 
@@ -102,7 +102,7 @@ class V1FormatterNode(FormatterNodeMixin):
                 "length": v1.V1_LENGTH_MAP[length],
             }
         )
-        return (prompt,)
+        return (prompt, copyright_tags, character_tags, condition_tags)
 
 
 class V2FormatterNode(FormatterNodeMixin):
@@ -186,7 +186,7 @@ class V2FormatterNode(FormatterNodeMixin):
                 "identity": v2.V2_IDENTITY_MAP[identity],
             }
         )
-        return (prompt,)
+        return (prompt, copyright_tags, character_tags, condition_tags)
 
 
 class V3FormatterNode(FormatterNodeMixin):
@@ -263,4 +263,4 @@ class V3FormatterNode(FormatterNodeMixin):
                 "length": v3.V3_LENGTH_MAP[length],
             }
         )
-        return (prompt,)
+        return (prompt, copyright_tags, character_tags, condition_tags)

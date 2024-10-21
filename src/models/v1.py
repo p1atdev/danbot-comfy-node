@@ -113,14 +113,16 @@ class V1Model(ModelWrapper):
         prompt: str,
         generation_config: GenerationConfig,
         **kwargs,
-    ) -> str:
+    ) -> tuple[str, str, str]:
         input_ids = self.tokenizer(prompt, return_tensors="pt").input_ids
         output_ids = self.model.generate(
             input_ids, generation_config=generation_config
         )[0]
-        output = self.decode_ids(output_ids)
+        output_full = self.decode_ids(output_ids)
+        output_new = output_full[len(input_ids[0]) :]
+        output_raw = self.decode_ids(output_ids)
 
-        return output
+        return (output_full, output_new, output_raw)
 
     def decode_ids(
         self,

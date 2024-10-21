@@ -8,6 +8,7 @@ from transformers import (
     AutoTokenizer,
     MistralForCausalLM,
     PreTrainedTokenizerBase,
+    PreTrainedTokenizer,
     GenerationConfig,
 )
 from optimum.onnxruntime.modeling_decoder import ORTModelForCausalLM
@@ -50,6 +51,16 @@ PROMPT_TEMPLATE_SFT = (
     "<general>{condition}<|input_end|>"
 ).strip()
 
+PROMPT_TEMPLATE_USE = (
+    "<|bos|>"
+    "{rating}{aspect_ratio}{length}"
+    "<copyright>{copyright}</copyright>"
+    "<character>{character}</character>"
+    "<use>{condition}</use>"
+    "<general><|input_end|>"
+    "<group>{condition}</group>"
+).strip()
+
 PROMPT_TEMPLATE_PRETRAIN = (
     "<|bos|>"
     "{rating}{aspect_ratio}{length}"
@@ -57,6 +68,8 @@ PROMPT_TEMPLATE_PRETRAIN = (
     "<character>{character}</character>"
     "<general>{condition}"
 ).strip()
+
+INPUT_END = "<|input_end|>"
 
 V3_MODELS: dict[str, dict[str, str]] = {
     # "v3 241006-sft (eager)": {
@@ -73,6 +86,22 @@ V3_MODELS: dict[str, dict[str, str]] = {
         "model_name_or_repo_id": "p1atdev/dart-v3-llama-8L-241018-2",
         "model_type": "eager",
         "prompt_template": PROMPT_TEMPLATE_PRETRAIN,
+    },
+    "v3 241018+241020-use (eager)": {
+        "model_name_or_repo_id": "p1atdev/dart-v3-llama-8L-241018_241020-sft-use",
+        "model_type": "eager",
+        "prompt_template": PROMPT_TEMPLATE_USE,
+    },
+    "v3 241005+241008-sft-fix (eager)": {
+        "model_name_or_repo_id": "p1atdev/dart-v3-llama-8L-241005_241008-sft-fix",
+        "model_type": "eager",
+        "prompt_template": PROMPT_TEMPLATE_SFT,
+    },
+    "v3 241018+241020-use-group (eager)": {
+        "model_name_or_repo_id": "p1atdev/dart-v3-llama-8L-241018_241020-sft-use-group",
+        "revision": "12bdec918e8d1eea3e55b7950aff214745757620",
+        "model_type": "eager",
+        "prompt_template": PROMPT_TEMPLATE_USE,
     },
 }
 
@@ -97,6 +126,9 @@ V3_FORM = {
         },
     ),
 }
+
+V3_COPYRIGHT_TAGS_PATH = TAGS_ROOT_DIR / "v3" / "copyright.txt"
+V3_CHARACTER_TAGS_PATH = TAGS_ROOT_DIR / "v3" / "character.txt"
 
 
 def aspect_ratio_tag(
@@ -127,19 +159,20 @@ def aspect_ratio_tag(
 class V3Model(ModelWrapper):
     version = "v3"
 
-    copyright_tags_path = TAGS_ROOT_DIR / "v3" / "copyright.txt"
-    character_tags_path = TAGS_ROOT_DIR / "v3" / "character.txt"
+    copyright_tags_path = V3_COPYRIGHT_TAGS_PATH
+    character_tags_path = V3_CHARACTER_TAGS_PATH
 
     MODEL_TYPE = Literal["eager", "onnx"]
 
     model: MistralForCausalLM | ORTModelForCausalLM
-    tokenizer: PreTrainedTokenizerBase
+    tokenizer: PreTrainedTokenizer | PreTrainedTokenizerBase
 
     prompt_template: str
 
     def __init__(
         self,
         model_name_or_repo_id: str,
+        revision: str | None = None,
         model_type: MODEL_TYPE = "eager",
         onnx_file_name: str | None = None,
         prompt_template: str = PROMPT_TEMPLATE_SFT,
@@ -147,12 +180,14 @@ class V3Model(ModelWrapper):
         if model_type == "eager":
             self.model = AutoModelForCausalLM.from_pretrained(
                 model_name_or_repo_id,
+                revision=revision,
                 torch_dtype=torch.bfloat16,
             )
             self.model.eval()
         elif model_type == "onnx":
             self.model = ORTModelForCausalLM.from_pretrained(
                 model_name_or_repo_id,
+                revision=revision,
                 file_name=onnx_file_name,
                 export=False,
             )
@@ -172,18 +207,23 @@ class V3Model(ModelWrapper):
         prompt: str,
         generation_config: GenerationConfig,
         **kwargs,
-    ) -> str:
-        input_ids = self.tokenizer(prompt, return_tensors="pt").input_ids
+    ) -> tuple[str, str, str]:
+        input_ids: torch.Tensor = self.tokenizer(prompt, return_tensors="pt").input_ids
+        input_end_index = len(input_ids[0])
+
         output_ids = self.model.generate(
             input_ids, generation_config=generation_config
         )[0]  # take the first sequence
-        output = self.decode_ids(output_ids)
+        output_full = self.decode_ids(output_ids)
+        output_new = self.decode_ids(output_ids[input_end_index:])
+        output_raw = self.decode_ids(output_ids, skip_special_tokens=False)
 
-        return output
+        return (output_full, output_new, output_raw)
 
     def decode_ids(
         self,
         generated_ids: torch.Tensor,  # (token_length,)
+        skip_special_tokens: bool = True,
     ) -> str:
         # (token_length,) -> (token_length, 1)
         generated_ids = generated_ids.unsqueeze(1)
@@ -192,7 +232,7 @@ class V3Model(ModelWrapper):
             [
                 token
                 for token in self.tokenizer.batch_decode(
-                    generated_ids, skip_special_tokens=True
+                    generated_ids, skip_special_tokens=skip_special_tokens
                 )
                 if token.strip() != ""
             ]

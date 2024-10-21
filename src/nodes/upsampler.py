@@ -39,8 +39,14 @@ class UpsamplerNode:
             },
         }
 
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("upsampled_tags",)
+    RETURN_TYPES = (
+        "STRING",
+        "STRING",
+    )
+    RETURN_NAMES = (
+        "generated_tags",
+        "raw_output",
+    )
 
     FUNCTION = "upsample"
 
@@ -59,9 +65,9 @@ class UpsamplerNode:
         seed: int,
     ):
         set_seed(seed)
-        output = dart_model.generate(
+        _full, new, raw = dart_model.generate(
             formatted_prompt,
             generation_config,
         )
 
-        return (output,)
+        return (new, raw)
