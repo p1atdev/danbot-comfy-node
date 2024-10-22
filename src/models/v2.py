@@ -169,7 +169,7 @@ class V2Model(ModelWrapper):
             negative_prompt_ids=negative_input_ids,
         )[0]  # take the first sequence
         output_full = self.decode_ids(output_ids)
-        output_new = output_full[len(input_ids[0]) :]
+        output_new = self.decode_ids(output_ids[len(input_ids[0]) :])
         output_raw = self.decode_ids(output_ids, skip_special_tokens=False)
 
         return (output_full, output_new, output_raw)
