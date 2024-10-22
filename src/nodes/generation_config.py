@@ -91,6 +91,7 @@ class GenerationConfigNode:
 
     RETURN_TYPES = (DART_GENERATION_CONFIG_TYPE,)
     RETURN_NAMES = ("generation_config",)
+    OUTPUT_TOOLTIPS = ("Generation config for the upsampler node.",)
 
     FUNCTION = "construct"
 

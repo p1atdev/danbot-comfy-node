@@ -37,6 +37,7 @@ class AutoAspectRatioTagNodeMixin(ABC):
     #     "INT",
     # )
     RETURN_NAMES = ("aspect_ratio_tag", "width", "height")
+    # OUTPUT_TOOLTIPS = ("Aspect ratio tag", "Width", "Height")
 
     FUNCTION = "calculate_aspect_ratio_tag"
 
@@ -61,6 +62,7 @@ class V2AutoAspectRatioTagNode(AutoAspectRatioTagNodeMixin):
         "INT",
         "INT",
     )
+    OUTPUT_TOOLTIPS = ("Aspect ratio tag for v2 model", "Width", "Height")
 
     def calculate_aspect_ratio_tag(
         self,
@@ -78,6 +80,7 @@ class V3AutoAspectRatioTagNode(AutoAspectRatioTagNodeMixin):
         "INT",
         "INT",
     )
+    OUTPUT_TOOLTIPS = ("Aspect ratio tag for v3 model", "Width", "Height")
 
     def calculate_aspect_ratio_tag(
         self,

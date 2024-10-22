@@ -47,6 +47,10 @@ class UpsamplerNode:
         "generated_tags",
         "raw_output",
     )
+    OUTPUT_TOOLIPS = (
+        "The generated tags by the model. This does not include the input prompt.",
+        "The raw output of the model. This includes the all prompt and special tags.",
+    )
 
     FUNCTION = "upsample"
 

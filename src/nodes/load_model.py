@@ -18,6 +18,7 @@ class LoadModelNode:
 
     RETURN_TYPES = (DART_MODEL_TYPE,)
     RETURN_NAMES = ("dart_model",)
+    OUTPUT_TOOLTIPS = ("Dart model",)
 
     FUNCTION = "load_model"
 
