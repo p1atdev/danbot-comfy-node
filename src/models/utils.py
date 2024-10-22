@@ -130,5 +130,9 @@ def normalize_tag_text(text: str, separator: str = ",") -> str:
     Normalize tag text by removing extra spaces and joining tokens
     """
     return separator.join(
-        [token.strip() for token in text.split(separator) if token.strip()]
+        [
+            token.strip().replace("_", " ")
+            for token in text.split(separator)
+            if token.strip()
+        ]
     )
