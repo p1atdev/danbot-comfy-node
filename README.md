@@ -15,5 +15,7 @@ This may have breaking changes in the future.
 
 Workflow image (download then drag and drop to your ComfyUI):
 
-![](./assets/workflows/v3_test_ug.png)
+<img src="./assets/workflows/v3_test_ug.png" width="200" >
+
+
 
