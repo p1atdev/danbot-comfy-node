@@ -78,16 +78,21 @@ class ModelWrapper(ABC):
         for tag in tags:
             if tag in copyright_list:
                 found_copyright_tags.append(tag)
+                continue
             if tag in character_list:
                 found_character_tags.append(tag)
+                continue
 
             if tag in special_list:
                 logging.warning(f"Special tag found: {tag} (skipped)")
-            elif tag not in vocab_list:
+                continue
+
+            if tag not in vocab_list:
                 logging.warning(f"Unknown tag found: {tag} (skipped)")
                 unknown_tags.append(tag)
-            else:
-                found_known_tags.append(tag)
+                continue
+
+            found_known_tags.append(tag)
 
         rating = estimate_rating(unknown_tags)
 
