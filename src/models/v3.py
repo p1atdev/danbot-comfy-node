@@ -84,28 +84,6 @@ V3_MODELS: dict[str, dict[str, str]] = {
     },
 }
 
-V3_FORM = {
-    "rating": (
-        V3_RATING_MAP.keys(),
-        {
-            "default": "general",
-        },
-    ),
-    "length": (
-        V3_LENGTH_MAP.keys(),
-        {
-            "default": "medium",
-        },
-    ),
-    "aspect_ratio": (
-        "STRING",
-        {
-            "default": "",
-            "placeholder": "Aspect ratio tags (4:3, 16:9, ...)",
-        },
-    ),
-}
-
 V3_COPYRIGHT_TAGS_PATH = TAGS_ROOT_DIR / "v3" / "copyright.txt"
 V3_CHARACTER_TAGS_PATH = TAGS_ROOT_DIR / "v3" / "character.txt"
 
