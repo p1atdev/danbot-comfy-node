@@ -163,13 +163,22 @@ class V3Model(ModelWrapper):
         self,
         prompt: str,
         generation_config: GenerationConfig,
+        negative_prompt: str | None = None,
         **kwargs,
     ) -> tuple[str, str, str]:
         input_ids: torch.Tensor = self.tokenizer(prompt, return_tensors="pt").input_ids
         input_end_index = len(input_ids[0])
 
+        negative_input_ids = None
+        if negative_prompt is not None:
+            negative_input_ids = self.tokenizer(
+                negative_prompt, return_tensors="pt"
+            ).input_ids
+
         output_ids = self.model.generate(
-            input_ids, generation_config=generation_config
+            input_ids,
+            generation_config=generation_config,
+            negative_prompt_ids=negative_input_ids,
         )[0]  # take the first sequence
         output_full = self.decode_ids(output_ids)
         output_new = self.decode_ids(output_ids[input_end_index:])

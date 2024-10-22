@@ -13,7 +13,7 @@ class UpsamplerNode:
         return {
             "required": {
                 "dart_model": (DART_MODEL_TYPE,),
-                "formatted_prompt": (
+                "positive_prompt": (
                     "STRING",
                     {
                         "forceInput": True,
@@ -70,14 +70,14 @@ class UpsamplerNode:
     def check_lazy_status(
         self,
         dart_model,
-        formatted_prompt,
+        positive_prompt,
         generation_config,
         seed,
         **kwargs,
     ):
         return [
             "dart_model",
-            "formatted_prompt",
+            "positive_prompt",
             "generation_config",
             "seed",
         ]
@@ -85,14 +85,14 @@ class UpsamplerNode:
     def upsample(
         self,
         dart_model: ModelWrapper,
-        formatted_prompt: str,
+        positive_prompt: str,
         generation_config: GenerationConfig,
         seed: int,
         negative_prompt: str | None = None,
     ):
         set_seed(seed)
         _full, new, raw = dart_model.generate(
-            formatted_prompt,
+            positive_prompt,
             generation_config,
             negative_prompt=negative_prompt,
         )
