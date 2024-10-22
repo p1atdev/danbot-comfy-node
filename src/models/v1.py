@@ -119,7 +119,7 @@ class V1Model(ModelWrapper):
             input_ids, generation_config=generation_config
         )[0]
         output_full = self.decode_ids(output_ids)
-        output_new = output_full[len(input_ids[0]) :]
+        output_new = self.decode_ids(output_ids[len(input_ids[0]) :])
         output_raw = self.decode_ids(output_ids)
 
         return (output_full, output_new, output_raw)
