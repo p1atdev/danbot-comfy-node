@@ -6,20 +6,10 @@ STRING_OPTIONS = {
     "multiline": True,
 }
 
-COPYRIGHT_OPTIONS = {
-    **STRING_OPTIONS,
-    "placeholder": "copyright tags (e.g. vocaloid, ...)",
-    "tooltip": "Comma separated tags that are categorized as copyright in danbooru",
-}
-CHARACTER_OPTIONS = {
-    **STRING_OPTIONS,
-    "placeholder": "character tags (e.g. hatsune miku, ...)",
-    "tooltip": "Comma separated tags that are categorized as character in danbooru",
-}
 INPUT_TAGS_OPTIONS = {
     **STRING_OPTIONS,
-    "placeholder": "general tags (e.g. 1girl, solo, ...)",
-    "tooltip": "Comma separated tags. This will be the condition for upsampling tags. copyright/character tags in this field will be automatically detected the and merged",
+    "placeholder": "input tags (e.g. 1girl, solo, hatsune miku, ...)",
+    "tooltip": "Comma separated tags. This will be the condition for upsampling tags. The copyright/character tags in this field will be automatically detected.",
 }
 
 
@@ -27,9 +17,10 @@ class FormatterNodeMixin:
     def __init__(self):
         pass
 
-    RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING", "STRING")
+    RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING", "STRING", "STRING")
     RETURN_NAMES = (
         "formatted_prompt",
+        "input_tags",
         "copyright_tags",
         "character_tags",
         "known_tags",
@@ -37,6 +28,7 @@ class FormatterNodeMixin:
     )
     OUTPUT_TOOLTIPS = (
         "Formatted prompt that should be passed to the upsampler node.",
+        "The input tags.",
         "Tags that are categorized as copyright.",
         "Tags that are categorized as character.",
         "Tags that the model knows except for copyright and character tags.",
@@ -70,18 +62,6 @@ class V1FormatterNode(FormatterNodeMixin):
                         "default": "long",
                     },
                 ),
-                "copyright": (
-                    "STRING",
-                    {
-                        **COPYRIGHT_OPTIONS,
-                    },
-                ),
-                "character": (
-                    "STRING",
-                    {
-                        **CHARACTER_OPTIONS,
-                    },
-                ),
                 "input_tags": (
                     "STRING",
                     {
@@ -96,28 +76,29 @@ class V1FormatterNode(FormatterNodeMixin):
         model: ModelWrapper,
         rating: str,
         length: str,
-        copyright: str,
-        character: str,
         input_tags: str,
     ):
         parsed = model.parse_prompt(input_tags, escape_brackets=False)
-
-        copyright_tags = normalize_tag_text(", ".join([copyright, parsed.copyright]))
-        character_tags = normalize_tag_text(", ".join([character, parsed.character]))
-        condition_tags = parsed.known
 
         rating_tag = v1.V1_RATING_MAP[parsed.rating if rating == "auto" else rating]
 
         prompt = model.format_prompt(
             {
-                "copyright": copyright_tags,
-                "character": character_tags,
-                "condition": condition_tags,
+                "copyright": parsed.copyright,
+                "character": parsed.character,
+                "condition": parsed.known,
                 "rating": rating_tag,
                 "length": v1.V1_LENGTH_MAP[length],
             }
         )
-        return (prompt, copyright_tags, character_tags, condition_tags, parsed.unknown)
+        return (
+            prompt,
+            input_tags,
+            parsed.copyright,
+            parsed.character,
+            parsed.known,
+            parsed.unknown,
+        )
 
 
 class V2FormatterNode(FormatterNodeMixin):
@@ -152,18 +133,6 @@ class V2FormatterNode(FormatterNodeMixin):
                         "default": "none",
                     },
                 ),
-                "copyright": (
-                    "STRING",
-                    {
-                        **COPYRIGHT_OPTIONS,
-                    },
-                ),
-                "character": (
-                    "STRING",
-                    {
-                        **CHARACTER_OPTIONS,
-                    },
-                ),
                 "input_tags": (
                     "STRING",
                     {
@@ -180,30 +149,31 @@ class V2FormatterNode(FormatterNodeMixin):
         rating: str,
         length: str,
         identity: str,
-        copyright: str,
-        character: str,
         input_tags: str,
     ):
         parsed = model.parse_prompt(input_tags, escape_brackets=False)
-
-        copyright_tags = normalize_tag_text(", ".join([copyright, parsed.copyright]))
-        character_tags = normalize_tag_text(", ".join([character, parsed.character]))
-        condition_tags = parsed.known
 
         rating_tag = v2.V2_RATING_MAP[parsed.rating if rating == "auto" else rating]
 
         prompt = model.format_prompt(
             {
-                "copyright": copyright_tags,
-                "character": character_tags,
-                "condition": condition_tags,
+                "copyright": parsed.copyright,
+                "character": parsed.character,
+                "condition": parsed.known,
                 "aspect_ratio": v2.V2_ASPECT_RATIO_MAP[aspect_ratio],
                 "rating": rating_tag,
                 "length": v2.V2_LENGTH_MAP[length],
                 "identity": v2.V2_IDENTITY_MAP[identity],
             }
         )
-        return (prompt, copyright_tags, character_tags, condition_tags, parsed.unknown)
+        return (
+            prompt,
+            input_tags,
+            parsed.copyright,
+            parsed.character,
+            parsed.known,
+            parsed.unknown,
+        )
 
 
 class V3FormatterNode(FormatterNodeMixin):
@@ -234,18 +204,6 @@ class V3FormatterNode(FormatterNodeMixin):
                         "default": "medium",
                     },
                 ),
-                "copyright": (
-                    "STRING",
-                    {
-                        **COPYRIGHT_OPTIONS,
-                    },
-                ),
-                "character": (
-                    "STRING",
-                    {
-                        **CHARACTER_OPTIONS,
-                    },
-                ),
                 "input_tags": (
                     "STRING",
                     {
@@ -262,26 +220,27 @@ class V3FormatterNode(FormatterNodeMixin):
         aspect_ratio: str,
         rating: str,
         length: str,
-        copyright: str,
-        character: str,
         input_tags: str,
     ):
         parsed = model.parse_prompt(input_tags, escape_brackets=False)
-
-        copyright_tags = normalize_tag_text(", ".join([copyright, parsed.copyright]))
-        character_tags = normalize_tag_text(", ".join([character, parsed.character]))
-        condition_tags = parsed.known
 
         rating_tag = v3.V3_RATING_MAP[parsed.rating if rating == "auto" else rating]
 
         prompt = model.format_prompt(
             {
-                "copyright": copyright_tags,
-                "character": character_tags,
-                "condition": condition_tags,
+                "copyright": parsed.copyright,
+                "character": parsed.character,
+                "condition": parsed.known,
                 "aspect_ratio": v3.V3_ASPECT_RATIO_MAP[aspect_ratio],
                 "rating": rating_tag,
                 "length": v3.V3_LENGTH_MAP[length],
             }
         )
-        return (prompt, copyright_tags, character_tags, condition_tags, parsed.unknown)
+        return (
+            prompt,
+            input_tags,
+            parsed.copyright,
+            parsed.character,
+            parsed.known,
+            parsed.unknown,
+        )

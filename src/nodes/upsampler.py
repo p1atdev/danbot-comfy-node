@@ -37,6 +37,15 @@ class UpsamplerNode:
                     },
                 ),
             },
+            "optional": {
+                "negative_prompt": (
+                    "STRING",
+                    {
+                        "forceInput": True,
+                        "tooltip": "Negative prompt that prevents to generate tags that are not wanted",
+                    },
+                ),
+            },
         }
 
     RETURN_TYPES = (
@@ -58,8 +67,20 @@ class UpsamplerNode:
 
     CATEGORY = "prompt/Danbooru Tags Transformer"
 
-    def check_lazy_status(self, dart_model, formatted_prompt, generation_config, seed):
-        return ["dart_model", "formatted_prompt", "generation_config", "seed"]
+    def check_lazy_status(
+        self,
+        dart_model,
+        formatted_prompt,
+        generation_config,
+        seed,
+        **kwargs,
+    ):
+        return [
+            "dart_model",
+            "formatted_prompt",
+            "generation_config",
+            "seed",
+        ]
 
     def upsample(
         self,
@@ -67,11 +88,13 @@ class UpsamplerNode:
         formatted_prompt: str,
         generation_config: GenerationConfig,
         seed: int,
+        negative_prompt: str | None = None,
     ):
         set_seed(seed)
         _full, new, raw = dart_model.generate(
             formatted_prompt,
             generation_config,
+            negative_prompt=negative_prompt,
         )
 
         return (new, raw)

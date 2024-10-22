@@ -117,6 +117,7 @@ class GenerationConfigNode:
             top_k=top_k,
             num_beams=num_beams,
             use_cache=True,
+            guidance_scale=1.5,
             # repetition_penalty=repetition_penalty,
         )
         return (config,)
