@@ -62,20 +62,20 @@ PROMPT_TEMPLATE_SFT = (
 ).strip()
 
 V2_MODELS = {
-    "v2 MoE sft (eager)": {
-        "model_name_or_repo_id": "p1atdev/dart-v2-moe-sft",
-        "model_type": "eager",
-        "prompt_template": PROMPT_TEMPLATE_SFT,
-    },
     "v2 sft (eager)": {
         "model_name_or_repo_id": "p1atdev/dart-v2-sft",
         "model_type": "eager",
         "prompt_template": PROMPT_TEMPLATE_SFT,
     },
-    "v2 sft (quantized onnx)": {
+    "v2 sft (onnx quantized)": {
         "model_name_or_repo_id": "p1atdev/dart-v2-sft",
         "model_type": "onnx",
         "onnx_file_name": "model_quantized.onnx",
+        "prompt_template": PROMPT_TEMPLATE_SFT,
+    },
+    "v2 MoE sft (eager)": {
+        "model_name_or_repo_id": "p1atdev/dart-v2-moe-sft",
+        "model_type": "eager",
         "prompt_template": PROMPT_TEMPLATE_SFT,
     },
 }

@@ -54,6 +54,8 @@ class AutoAspectRatioTagNodeMixin(ABC):
 
 
 class V2AutoAspectRatioTagNode(AutoAspectRatioTagNodeMixin):
+    DESCRIPTION = "Calculates the aspect ratio tag of an image to generate by v2 rule."
+
     RETURN_TYPES = (
         list(v2.V2_ASPECT_RATIO_MAP.keys()),
         "INT",
@@ -69,6 +71,8 @@ class V2AutoAspectRatioTagNode(AutoAspectRatioTagNodeMixin):
 
 
 class V3AutoAspectRatioTagNode(AutoAspectRatioTagNodeMixin):
+    DESCRIPTION = "Calculates the aspect ratio tag of an image to generate by v3 rule."
+
     RETURN_TYPES = (
         list(v3.V3_ASPECT_RATIO_MAP.keys()),
         "INT",

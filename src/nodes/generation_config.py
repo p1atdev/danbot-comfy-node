@@ -75,6 +75,17 @@ class GenerationConfigNode:
                         "tooltip": "Number of beams to use for beam search. 1 means no beam search. It is effective when the temperature is high",
                     },
                 ),
+                # "repetition_penalty": (
+                #     "FLOAT",
+                #     {
+                #         "default": 1.0,
+                #         "min": 1.0,
+                #         "max": 2.0,
+                #         "step": 0.1,
+                #         "display": "number",
+                #         "tooltip": "The parameter for repetition penalty. 1.0 means no penalty",
+                #     },
+                # ),
             },
         }
 
@@ -95,6 +106,7 @@ class GenerationConfigNode:
         top_p: float,
         top_k: int,
         num_beams: int,
+        # repetition_penalty: float,
     ):
         config = GenerationConfig(
             max_new_tokens=max_new_tokens,
@@ -104,5 +116,6 @@ class GenerationConfigNode:
             top_k=top_k,
             num_beams=num_beams,
             use_cache=True,
+            # repetition_penalty=repetition_penalty,
         )
         return (config,)

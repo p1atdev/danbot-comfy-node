@@ -3,6 +3,8 @@ from .type import DART_MODEL_TYPE
 
 
 class LoadModelNode:
+    DESCRIPTION = "Loads a Dart model."
+
     def __init__(self):
         pass
 

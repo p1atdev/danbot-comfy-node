@@ -53,7 +53,7 @@ V1_MODELS = {
         "onnx_file_name": "model.onnx",
         "prompt_template": PROMPT_TEMPLATE_SFT,
     },
-    "v1 sft (quantized onnx)": {
+    "v1 sft (onnx quant)": {
         "model_name_or_repo_id": "p1atdev/dart-v1-sft",
         "model_type": "onnx",
         "onnx_file_name": "model_quantized.onnx",

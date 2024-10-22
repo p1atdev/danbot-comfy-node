@@ -38,6 +38,8 @@ class FormatterNodeMixin:
 
 
 class V1FormatterNode(FormatterNodeMixin):
+    DESCRIPTION = "Formats a prompt for a Dart v1 model. This node deos not compatible with the v2 and v3 models."
+
     @classmethod
     def INPUT_TYPES(s):
         return {
@@ -106,6 +108,8 @@ class V1FormatterNode(FormatterNodeMixin):
 
 
 class V2FormatterNode(FormatterNodeMixin):
+    DESCRIPTION = "Formats a prompt for a Dart v2 model. This node deos not compatible with the v1 and v3 models."
+
     @classmethod
     def INPUT_TYPES(s):
         return {
@@ -190,6 +194,10 @@ class V2FormatterNode(FormatterNodeMixin):
 
 
 class V3FormatterNode(FormatterNodeMixin):
+    DESCRIPTION = "Formats a prompt for a Dart v3 model. This node deos not compatible with the v1 and v2 models."
+
+    EXPERIMENTAL = True
+
     @classmethod
     def INPUT_TYPES(s):
         return {
