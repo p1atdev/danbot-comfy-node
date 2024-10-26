@@ -14,8 +14,8 @@ from optimum.onnxruntime.modeling_decoder import ORTModelForCausalLM
 
 from .utils import (
     ModelWrapper,
-    TAGS_ROOT_DIR,
 )
+from ..tags import TAGS_ROOT_DIR
 
 V1_RATING_MAP = {
     "general": "rating:sfw, rating:general",
@@ -113,6 +113,7 @@ class V1Model(ModelWrapper):
         prompt: str,
         generation_config: GenerationConfig,
         negative_prompt: str | None = None,
+        ban_tags: str | None = None,
         **kwargs,
     ) -> tuple[str, str, str]:
         input_ids = self.tokenizer(prompt, return_tensors="pt").input_ids
@@ -123,10 +124,15 @@ class V1Model(ModelWrapper):
                 negative_prompt, return_tensors="pt"
             ).input_ids
 
+        ban_token_ids = None
+        if ban_tags is not None:
+            ban_token_ids = self.encode_ban_tags(ban_tags)
+
         output_ids = self.model.generate(
             input_ids,
             generation_config=generation_config,
             negative_prompt_ids=negative_input_ids,
+            ban_token_ids=ban_token_ids,
         )[0]  # take the first sequence
         output_full = self.decode_ids(output_ids)
         output_new = self.decode_ids(output_ids[len(input_ids[0]) :])

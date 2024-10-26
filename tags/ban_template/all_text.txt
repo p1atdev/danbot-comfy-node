@@ -1,0 +1,157 @@
+character name
+happy new year
+birthday
+happy birthday
+happy halloween
+happy valentine
+happy anniversary
+ad
+
+// languages
+afrikaans text
+albanian text
+amharic text
+arabic text
+aramaic text
+archaic japanese text
+armenian text
+australian english text
+azerbaijani text
+backwards text
+basque text
+belarusian text
+bengali text
+blurry text
+bopomofo text
+breton text
+british english text
+bulgarian text
+cantonese text
+catalan text
+cebuano text
+censored by text
+censored text
+chichewa text
+chinese text
+church slavonic text
+circling text
+corsican text
+czech text
+danish text
+dutch text
+english text
+engrish text
+esperanto text
+estonian text
+fake text
+fantasy text
+faux text
+filipino text
+finnish text
+foreground text
+french text
+galician text
+georgian text
+german text
+gibberish text
+gradient text
+greek text
+gyeongsang korean text
+haitian creole text
+hawaiian text
+hebrew text
+hindi text
+hmong text
+holding text
+hungarian text
+icelandic text
+igbo text
+indian text
+indonesian text
+interslavic text
+irish english text
+irish text
+italian text
+javanese text
+kazakh text
+khmer text
+kinyarwanda text
+kiriji text
+korean text
+kurdish text
+kyrgyz text
+lao text
+latin text
+latvian text
+lithuanian text
+luxembourgish text
+macedonian text
+malagasy text
+malay text
+malayalam text
+maltese text
+maori text
+metal band text
+middle english text
+minnan text
+mirrored text
+mixed-language text
+mojibake text
+mongolian text
+multicolored text
+nahuatl text
+nepali text
+norwegian text
+old norse text
+old turkic text
+overwritten text
+persian text
+pinyin text
+pixel text
+polish text
+portuguese text
+rainbow text
+romaja text
+romaji text
+romanian text
+russian text
+scots text
+scottish english text
+serbo-croatian text
+shenyang mandarin text
+sichuanese text
+simplified chinese text
+sindhi text
+singlish text
+slovak text
+slovenian text
+somali text
+spanish text
+sundanese text
+swabian german text
+swahili text
+swedish text
+tagalog text
+tamil text
+tangut text
+tatar text
+telugu text
+tengwar text
+thai text
+tibetan text
+traditional chinese text
+turkish text
+ukrainian text
+upside-down text
+uzbek text
+vertical text
+vietnamese text
+wall of text
+welsh text
+xhosa text
+yellow text
+yiddish text
+yoruba text
+yucatec mayan text
+zalgo text
+zulu text

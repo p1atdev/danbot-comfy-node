@@ -15,8 +15,8 @@ from optimum.onnxruntime.modeling_decoder import ORTModelForCausalLM
 
 from .utils import (
     ModelWrapper,
-    TAGS_ROOT_DIR,
 )
+from ..tags import TAGS_ROOT_DIR
 
 V3_RATING_MAP = {
     "general": "<|rating:general|>",
@@ -72,15 +72,25 @@ PROMPT_TEMPLATE_PRETRAIN = (
 INPUT_END = "<|input_end|>"
 
 V3_MODELS: dict[str, dict[str, str]] = {
-    # "v3 241018-pretrain (eager)": {
-    #     "model_name_or_repo_id": "p1atdev/dart-v3-llama-8L-241018-2",
-    #     "model_type": "eager",
-    #     "prompt_template": PROMPT_TEMPLATE_PRETRAIN,
-    # },
     "v3 sft 241018+241020-use-group": {
         "model_name_or_repo_id": "p1atdev/dart-v3-sft-test-241018_241020-UG",
         "model_type": "eager",
         "prompt_template": PROMPT_TEMPLATE_USE,
+    },
+    "v3 sft 241018+241022": {
+        "model_name_or_repo_id": "p1atdev/dart-v3-llama-8L-241018_241022-sft",
+        "model_type": "eager",
+        "prompt_template": PROMPT_TEMPLATE_SFT,
+    },
+    "v3 sft 241018+241023": {
+        "model_name_or_repo_id": "p1atdev/dart-v3-llama-8L-241018_241023-sft-1",
+        "model_type": "eager",
+        "prompt_template": PROMPT_TEMPLATE_SFT,
+    },
+    "v3 sft 241018+241023 2": {
+        "model_name_or_repo_id": "p1atdev/dart-v3-llama-8L-241018_241023-sft-2",
+        "model_type": "eager",
+        "prompt_template": PROMPT_TEMPLATE_SFT,
     },
 }
 
@@ -164,6 +174,7 @@ class V3Model(ModelWrapper):
         prompt: str,
         generation_config: GenerationConfig,
         negative_prompt: str | None = None,
+        ban_tags: str | None = None,
         **kwargs,
     ) -> tuple[str, str, str]:
         input_ids: torch.Tensor = self.tokenizer(prompt, return_tensors="pt").input_ids
@@ -175,10 +186,15 @@ class V3Model(ModelWrapper):
                 negative_prompt, return_tensors="pt"
             ).input_ids
 
+        ban_token_ids = None
+        if ban_tags is not None:
+            ban_token_ids = self.encode_ban_tags(ban_tags)
+
         output_ids = self.model.generate(
             input_ids,
             generation_config=generation_config,
             negative_prompt_ids=negative_input_ids,
+            bad_words_ids=ban_token_ids,
         )[0]  # take the first sequence
         output_full = self.decode_ids(output_ids)
         output_new = self.decode_ids(output_ids[input_end_index:])

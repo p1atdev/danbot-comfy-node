@@ -4,6 +4,7 @@ NODE_CLASS_MAPPINGS = {
     "DartLoadModel": nodes.LoadModelNode,
     "DartUpsamplerNode": nodes.UpsamplerNode,
     "DartGenerationConfig": nodes.GenerationConfigNode,
+    "DartBanTagsManagerNode": nodes.BanTagsManagerNode,
     #
     "DartV2AutoAspectRatioTag": nodes.V2AutoAspectRatioTagNode,
     "DartV3AutoAspectRatioTag": nodes.V3AutoAspectRatioTagNode,
@@ -19,16 +20,17 @@ NODE_CLASS_MAPPINGS = {
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "DartLoadModel": "Dart Load Model",
-    "DartUpsamplerNode": "Dart Upsampler Node",
+    "DartUpsamplerNode": "Dart Upsampler",
     "DartGenerationConfig": "Dart Generation Config",
+    "DartBanTagsManagerNode": "Dart Ban Tags Manager",
     #
     "DartV2AutoAspectRatioTag": "Dart V2 Auto Aspect Ratio Tag",
     "DartV3AutoAspectRatioTag": "Dart V3 Auto Aspect Ratio Tag",
     #
     #
-    "DartV1FormatterNode": "Dart V1 Formatter Node",
-    "DartV2FormatterNode": "Dart V2 Formatter Node",
-    "DartV3FormatterNode": "Dart V3 Formatter Node",
+    "DartV1FormatterNode": "Dart V1 Formatter",
+    "DartV2FormatterNode": "Dart V2 Formatter",
+    "DartV3FormatterNode": "Dart V3 Formatter",
     #
     "DartUtilsPrintString": "Dart Print String",
     "DartUtilsConcatString": "Dart Concat String",

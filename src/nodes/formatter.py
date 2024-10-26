@@ -1,4 +1,4 @@
-from ..models.utils import ModelWrapper, normalize_tag_text
+from ..models.utils import ModelWrapper
 from ..models import v1, v2, v3
 from .type import DART_MODEL_TYPE
 

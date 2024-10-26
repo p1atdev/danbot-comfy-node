@@ -45,6 +45,13 @@ class UpsamplerNode:
                         "tooltip": "Negative prompt that prevents to generate tags that are not wanted",
                     },
                 ),
+                "ban_tags": (
+                    "STRING",
+                    {
+                        "forceInput": True,
+                        "tooltip": "Tags to ban during generation",
+                    },
+                ),
             },
         }
 
@@ -89,12 +96,14 @@ class UpsamplerNode:
         generation_config: GenerationConfig,
         seed: int,
         negative_prompt: str | None = None,
+        ban_tags: str | None = None,
     ):
         set_seed(seed)
         _full, new, raw = dart_model.generate(
             positive_prompt,
             generation_config,
             negative_prompt=negative_prompt,
+            ban_tags=ban_tags,
         )
 
         return (new, raw)

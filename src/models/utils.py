@@ -1,27 +1,18 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Literal
-import os
 from pathlib import Path
 import logging
+import re
 
 from transformers import GenerationConfig, PreTrainedTokenizerBase
 
 from comfy.sd1_clip import escape_important, token_weights, unescape_important
-from ..tags import estimate_rating, RATING_TYPE
+
+from ..tags import estimate_rating, RATING_TYPE, load_tags
 
 
 MODEL_VERSIONS = Literal["v1", "v2", "v3"]
-
-SELF_PATH_DIR = Path(os.path.dirname(os.path.abspath(__file__)))
-TAGS_ROOT_DIR = SELF_PATH_DIR / ".." / "tags"
-
-
-def load_tags(path: str | Path) -> list[str]:
-    with open(path, "r") as f:
-        tags = f.read().splitlines()
-
-    return tags
 
 
 @dataclass
@@ -104,6 +95,27 @@ class ModelWrapper(ABC):
             rating=rating,
         )
 
+    def encode_ban_tags(self, ban_tags: str) -> list[list[int]] | None:
+        # wildcard tags support
+        tags = [tag.strip() for tag in ban_tags.split(",")]
+        vocab = self.tokenizer.get_vocab()
+
+        ban_token_ids: list[list[int]] = []
+        for tag in tags:  # search tags in vocab
+            if "*" in tag:
+                pattern = re.compile(tag.replace("*", ".*"))
+                for token, _id in vocab.items():
+                    if pattern.match(token):
+                        ban_token_ids.append([_id])
+            else:
+                if tag in vocab:
+                    ban_token_ids.append([vocab[tag]])
+
+        if len(ban_token_ids) == 0:
+            return None
+
+        return ban_token_ids
+
 
 def unescape_important_all(text: str) -> list[str]:
     """
@@ -128,16 +140,3 @@ def split_tokens(text: str, separator: str = ",") -> list[str]:
     Split text into tokens without prefix and suffix spaces
     """
     return [token.strip() for token in text.split(separator) if token.strip()]
-
-
-def normalize_tag_text(text: str, separator: str = ",") -> str:
-    """
-    Normalize tag text by removing extra spaces and joining tokens
-    """
-    return separator.join(
-        [
-            token.strip().replace("_", " ")
-            for token in text.split(separator)
-            if token.strip()
-        ]
-    )
