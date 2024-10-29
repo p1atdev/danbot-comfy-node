@@ -1,0 +1,38 @@
+# newlines are removed when loading
+V1_SFT: |-
+  <|bos|>
+  <rating>{rating}</rating>
+  <copyright>{copyright}</copyright>
+  <character>{character}</character>
+  {length}
+  <general>{condition}<|input_end|>
+
+V2_SFT: |-
+  <|bos|>
+  <copyright>{copyright}</copyright>
+  <character>{character}</character>
+  {rating}{aspect_ratio}{length}
+  <general>{condition}{identity}<|input_end|>
+
+V3_USE: |-
+  <|bos|>
+  {rating}{aspect_ratio}{length}
+  <copyright>{copyright}</copyright>
+  <character>{character}</character>
+  <use>{condition}</use>
+  <general><|input_end|>
+  <group>{condition}</group>
+
+V3_SFT: |-
+  <|bos|>
+  {rating}{aspect_ratio}{length}
+  <copyright>{copyright}</copyright>
+  <character>{character}</character>
+  <general>{condition}<|input_end|>
+
+V3_PRETRAIN: |-
+  <|bos|>
+  {rating}{aspect_ratio}{length}
+  <copyright>{copyright}</copyright>
+  <character>{character}</character>
+  <general>{condition}

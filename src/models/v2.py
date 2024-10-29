@@ -8,8 +8,6 @@ from transformers import (
     AutoTokenizer,
     MistralForCausalLM,
     PreTrainedTokenizerBase,
-    PreTrainedModel,
-    BatchEncoding,
     GenerationConfig,
 )
 from optimum.onnxruntime.modeling_decoder import ORTModelForCausalLM
@@ -54,33 +52,6 @@ V2_IDENTITY_MAP = {
 }
 
 
-PROMPT_TEMPLATE_SFT = (
-    "<|bos|>"
-    "<copyright>{copyright}</copyright>"
-    "<character>{character}</character>"
-    "{rating}{aspect_ratio}{length}"
-    "<general>{condition}{identity}<|input_end|>"
-).strip()
-
-V2_MODELS = {
-    "v2 sft (eager)": {
-        "model_name_or_repo_id": "p1atdev/dart-v2-sft",
-        "model_type": "eager",
-        "prompt_template": PROMPT_TEMPLATE_SFT,
-    },
-    "v2 sft (onnx quantized)": {
-        "model_name_or_repo_id": "p1atdev/dart-v2-sft",
-        "model_type": "onnx",
-        "onnx_file_name": "model_quantized.onnx",
-        "prompt_template": PROMPT_TEMPLATE_SFT,
-    },
-    "v2 MoE sft (eager)": {
-        "model_name_or_repo_id": "p1atdev/dart-v2-moe-sft",
-        "model_type": "eager",
-        "prompt_template": PROMPT_TEMPLATE_SFT,
-    },
-}
-
 V2_COPYRIGHT_TAGS_PATH = TAGS_ROOT_DIR / "v2" / "copyright.txt"
 V2_CHARACTER_TAGS_PATH = TAGS_ROOT_DIR / "v2" / "character.txt"
 
@@ -121,27 +92,27 @@ class V2Model(ModelWrapper):
 
     def __init__(
         self,
-        model_name_or_repo_id: str,
+        model_name_or_path: str,
+        prompt_template: str,
         model_type: MODEL_TYPE = "eager",
         onnx_file_name: str | None = None,
-        prompt_template: str = PROMPT_TEMPLATE_SFT,
     ):
         if model_type == "eager":
             self.model = AutoModelForCausalLM.from_pretrained(
-                model_name_or_repo_id,
+                model_name_or_path,
                 torch_dtype=torch.bfloat16,
             )
             self.model.eval()
         elif model_type == "onnx":
             self.model = ORTModelForCausalLM.from_pretrained(
-                model_name_or_repo_id,
+                model_name_or_path,
                 file_name=onnx_file_name,
                 export=False,
             )
         else:
             raise ValueError(f"Invalid model type: {model_type}")
         self.tokenizer = AutoTokenizer.from_pretrained(
-            model_name_or_repo_id, trust_remote_code=True
+            model_name_or_path, trust_remote_code=True
         )
         self.prompt_template = prompt_template
 

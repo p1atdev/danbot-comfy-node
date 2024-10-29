@@ -43,56 +43,7 @@ V3_ASPECT_RATIO_MAP = {
     "too_wide": "<|aspect_ratio:too_wide|>",
 }
 
-PROMPT_TEMPLATE_SFT = (
-    "<|bos|>"
-    "{rating}{aspect_ratio}{length}"
-    "<copyright>{copyright}</copyright>"
-    "<character>{character}</character>"
-    "<general>{condition}<|input_end|>"
-).strip()
-
-PROMPT_TEMPLATE_USE = (
-    "<|bos|>"
-    "{rating}{aspect_ratio}{length}"
-    "<copyright>{copyright}</copyright>"
-    "<character>{character}</character>"
-    "<use>{condition}</use>"
-    "<general><|input_end|>"
-    "<group>{condition}</group>"
-).strip()
-
-PROMPT_TEMPLATE_PRETRAIN = (
-    "<|bos|>"
-    "{rating}{aspect_ratio}{length}"
-    "<copyright>{copyright}</copyright>"
-    "<character>{character}</character>"
-    "<general>{condition}"
-).strip()
-
 INPUT_END = "<|input_end|>"
-
-V3_MODELS: dict[str, dict[str, str]] = {
-    "v3 sft 241018+241020-use-group": {
-        "model_name_or_repo_id": "p1atdev/dart-v3-sft-test-241018_241020-UG",
-        "model_type": "eager",
-        "prompt_template": PROMPT_TEMPLATE_USE,
-    },
-    "v3 sft 241018+241022": {
-        "model_name_or_repo_id": "p1atdev/dart-v3-llama-8L-241018_241022-sft",
-        "model_type": "eager",
-        "prompt_template": PROMPT_TEMPLATE_SFT,
-    },
-    "v3 sft 241018+241023": {
-        "model_name_or_repo_id": "p1atdev/dart-v3-llama-8L-241018_241023-sft-1",
-        "model_type": "eager",
-        "prompt_template": PROMPT_TEMPLATE_SFT,
-    },
-    "v3 sft 241018+241023 2": {
-        "model_name_or_repo_id": "p1atdev/dart-v3-llama-8L-241018_241023-sft-2",
-        "model_type": "eager",
-        "prompt_template": PROMPT_TEMPLATE_SFT,
-    },
-}
 
 V3_COPYRIGHT_TAGS_PATH = TAGS_ROOT_DIR / "v3" / "copyright.txt"
 V3_CHARACTER_TAGS_PATH = TAGS_ROOT_DIR / "v3" / "character.txt"
@@ -138,22 +89,22 @@ class V3Model(ModelWrapper):
 
     def __init__(
         self,
-        model_name_or_repo_id: str,
+        model_name_or_path: str,
+        prompt_template: str,
         revision: str | None = None,
         model_type: MODEL_TYPE = "eager",
         onnx_file_name: str | None = None,
-        prompt_template: str = PROMPT_TEMPLATE_SFT,
     ):
         if model_type == "eager":
             self.model = AutoModelForCausalLM.from_pretrained(
-                model_name_or_repo_id,
+                model_name_or_path,
                 revision=revision,
                 torch_dtype=torch.bfloat16,
             )
             self.model.eval()
         elif model_type == "onnx":
             self.model = ORTModelForCausalLM.from_pretrained(
-                model_name_or_repo_id,
+                model_name_or_path,
                 revision=revision,
                 file_name=onnx_file_name,
                 export=False,
@@ -161,7 +112,7 @@ class V3Model(ModelWrapper):
         else:
             raise ValueError(f"Invalid model type: {model_type}")
         self.tokenizer = AutoTokenizer.from_pretrained(
-            model_name_or_repo_id, trust_remote_code=True
+            model_name_or_path, trust_remote_code=True
         )
         self.prompt_template = prompt_template
 

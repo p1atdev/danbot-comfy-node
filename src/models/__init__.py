@@ -1,10 +1,10 @@
-from .v1 import V1_MODELS, V1Model
-from .v2 import V2_MODELS, V2Model
-from .v3 import V3_MODELS, V3Model
+from .v1 import V1Model
+from .v2 import V2Model
+from .v3 import V3Model
 from .utils import ModelWrapper, MODEL_VERSIONS
 
-ALL_MODELS: dict[str, tuple[type[ModelWrapper], dict[str, str]]] = {
-    **{name: (V1Model, config) for name, config in V1_MODELS.items()},
-    **{name: (V2Model, config) for name, config in V2_MODELS.items()},
-    **{name: (V3Model, config) for name, config in V3_MODELS.items()},
+MODEL_VERSION_TO_CLASS: dict[MODEL_VERSIONS, type[ModelWrapper]] = {
+    "v1": V1Model,
+    "v2": V2Model,
+    "v3": V3Model,
 }

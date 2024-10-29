@@ -1,4 +1,4 @@
-from ..models import ALL_MODELS
+from ..config import load_models_configs
 from .type import DART_MODEL_TYPE
 
 
@@ -10,9 +10,10 @@ class LoadModelNode:
 
     @classmethod
     def INPUT_TYPES(s):
+        configs = load_models_configs()
         return {
             "required": {
-                "model_name": (list(ALL_MODELS.keys()),),
+                "model_name": (list(configs.keys()),),
             },
         }
 
@@ -27,6 +28,7 @@ class LoadModelNode:
     CATEGORY = "prompt/Danbooru Tags Transformer"
 
     def load_model(self, model_name: str):
-        model_cls, config = ALL_MODELS[model_name]
-        model = model_cls(**config)
+        configs = load_models_configs()
+        config = configs[model_name]
+        model = config.load_model()
         return (model,)

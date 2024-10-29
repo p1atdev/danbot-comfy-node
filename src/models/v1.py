@@ -31,36 +31,6 @@ V1_LENGTH_MAP = {
     "very_long": "<|very_long|>",
 }
 
-
-PROMPT_TEMPLATE_SFT = (
-    "<|bos|>"
-    "<rating>{rating}</rating>"
-    "<copyright>{copyright}</copyright>"
-    "<character>{character}</character>"
-    "{length}"
-    "<general>{condition}<|input_end|>"
-).strip()
-
-V1_MODELS = {
-    "v1 sft (eager)": {
-        "model_name_or_repo_id": "p1atdev/dart-v1-sft",
-        "model_type": "eager",
-        "prompt_template": PROMPT_TEMPLATE_SFT,
-    },
-    "v1 sft (onnx)": {
-        "model_name_or_repo_id": "p1atdev/dart-v1-sft",
-        "model_type": "onnx",
-        "onnx_file_name": "model.onnx",
-        "prompt_template": PROMPT_TEMPLATE_SFT,
-    },
-    "v1 sft (onnx quant)": {
-        "model_name_or_repo_id": "p1atdev/dart-v1-sft",
-        "model_type": "onnx",
-        "onnx_file_name": "model_quantized.onnx",
-        "prompt_template": PROMPT_TEMPLATE_SFT,
-    },
-}
-
 V1_COPYRIGHT_TAGS_PATH = TAGS_ROOT_DIR / "v1" / "copyright.txt"
 V1_CHARACTER_TAGS_PATH = TAGS_ROOT_DIR / "v1" / "character.txt"
 
@@ -76,31 +46,29 @@ class V1Model(ModelWrapper):
     model: OPTForCausalLM | ORTModelForCausalLM
     tokenizer: PreTrainedTokenizerBase
 
-    prompt_template: str = PROMPT_TEMPLATE_SFT
-
     def __init__(
         self,
-        model_name_or_repo_id: str,
+        model_name_or_path: str,
+        prompt_template: str,
         model_type: MODEL_TYPE = "eager",
         onnx_file_name: str | None = None,
-        prompt_template: str = PROMPT_TEMPLATE_SFT,
     ):
         if model_type == "eager":
             self.model = AutoModelForCausalLM.from_pretrained(
-                model_name_or_repo_id,
+                model_name_or_path,
                 torch_dtype=torch.bfloat16,
             )
             self.model.eval()
         elif model_type == "onnx":
             self.model = ORTModelForCausalLM.from_pretrained(
-                model_name_or_repo_id,
+                model_name_or_path,
                 file_name=onnx_file_name,
                 export=False,
             )
         else:
             raise ValueError(f"Invalid model type: {model_type}")
         self.tokenizer = AutoTokenizer.from_pretrained(
-            model_name_or_repo_id, trust_remote_code=True
+            model_name_or_path, trust_remote_code=True
         )
         self.prompt_template = prompt_template
 
