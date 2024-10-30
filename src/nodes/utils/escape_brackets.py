@@ -23,7 +23,7 @@ class EscapeBracketsNode:
     OUTPUT_NODE = False
 
     CATEGORY = "prompt/Danbooru Tags Transformer/utils"
-    DESCRIPTION = "Concats the input strings."
+    DESCRIPTION = "Escape brackets."
 
     def escape(self, text: str):
         return (escape_important(text),)

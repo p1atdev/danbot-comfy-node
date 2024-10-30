@@ -18,7 +18,7 @@ def load_ban_template(file: str):
     return load_tags(BAN_TEMPLATE_DIR / file)
 
 
-class BanTagsManagerNode:
+class LoadBanTagsNode:
     def __init__(self):
         pass
 
@@ -28,19 +28,7 @@ class BanTagsManagerNode:
 
         return {
             "optional": {
-                "template": (
-                    files,
-                    {
-                        "force_input": True,
-                    },
-                ),
-                "manual": (
-                    "STRING",
-                    {
-                        "force_input": True,
-                        "multiline": True,
-                    },
-                ),
+                "template_name": (files,),
             },
         }
 
@@ -57,11 +45,8 @@ class BanTagsManagerNode:
     def compose(
         self,
         template: str | None,
-        manual: str | None,
     ):
         tags = load_ban_template(template) if template else []
-        if manual:
-            tags += [manual]
 
         tag_text = normalize_tag_text(",".join(tags))
 

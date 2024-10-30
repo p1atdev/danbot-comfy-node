@@ -4,7 +4,7 @@ NODE_CLASS_MAPPINGS = {
     "DartLoadModel": nodes.LoadModelNode,
     "DartUpsamplerNode": nodes.UpsamplerNode,
     "DartGenerationConfig": nodes.GenerationConfigNode,
-    "DartBanTagsManagerNode": nodes.BanTagsManagerNode,
+    "DartLoadBanTagsNode": nodes.LoadBanTagsNode,
     #
     "DartV2AutoAspectRatioTag": nodes.V2AutoAspectRatioTagNode,
     "DartV3AutoAspectRatioTag": nodes.V3AutoAspectRatioTagNode,
@@ -16,13 +16,14 @@ NODE_CLASS_MAPPINGS = {
     "DartUtilsPrintString": nodes.PrintStringNode,
     "DartUtilsConcatString": nodes.ConcatStringNode,
     "DartUtilsEscapeBrackets": nodes.EscapeBracketsNode,
+    "DartUtilsTextInput": nodes.TextInputNode,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "DartLoadModel": "Dart Load Model",
     "DartUpsamplerNode": "Dart Upsampler",
     "DartGenerationConfig": "Dart Generation Config",
-    "DartBanTagsManagerNode": "Dart Ban Tags Manager",
+    "DartLoadBanTagsNode": "Dart Load Ban Tags",
     #
     "DartV2AutoAspectRatioTag": "Dart V2 Auto Aspect Ratio Tag",
     "DartV3AutoAspectRatioTag": "Dart V3 Auto Aspect Ratio Tag",
@@ -35,6 +36,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "DartUtilsPrintString": "Dart Print String",
     "DartUtilsConcatString": "Dart Concat String",
     "DartUtilsEscapeBrackets": "Dart Escape Brackets",
+    "DartUtilsTextInput": "Dart Text Input",
 }
 
 WEB_DIRECTORY = "./src/js"

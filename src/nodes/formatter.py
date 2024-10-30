@@ -9,7 +9,7 @@ STRING_OPTIONS = {
 INPUT_TAGS_OPTIONS = {
     **STRING_OPTIONS,
     "placeholder": "input tags (e.g. 1girl, solo, hatsune miku, ...)",
-    "tooltip": "Comma separated tags. This will be the condition for upsampling tags. The copyright/character tags in this field will be automatically detected.",
+    "tooltip": "Comma separated tags. This is the condition for upsampling tags. The copyright/character tags in this field are automatically detected.",
 }
 
 
