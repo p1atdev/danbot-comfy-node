@@ -1,0 +1,15 @@
+[project]
+name = "dart-comfyui-node"
+description = "Upsamples danbooru tags using Dart models."
+version = "0.1.0"
+license = { file = "LICENSE" }
+dependencies = ["optimum[onnxruntime]"]
+
+[project.urls]
+Repository = "https://github.com/p1atdev/dart-comfyui-node"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = "p1atdev"
+DisplayName = "dart-comfyui-node"
+Icon = ""
