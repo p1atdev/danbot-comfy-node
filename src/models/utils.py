@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Literal
+from typing import Literal, NamedTuple
 from pathlib import Path
 import logging
 import re
@@ -27,6 +27,11 @@ class PromptParseResult:
 class EncoderDecoderTokenizer(ProcessorMixin, ABC):
     encoder_tokenizer: PreTrainedTokenizerFast
     decoder_tokenizer: PreTrainedTokenizerFast
+
+
+@dataclass
+class AbstractTemplateConfig(ABC):
+    pass
 
 
 class ModelWrapper(ABC):

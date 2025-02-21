@@ -1,6 +1,11 @@
 from ..models.utils import ModelWrapper
 from ..models import v2408
-from .type import DANBOT_MODEL_TYPE, DANBOT_CATEGORY, FORMAT_KWARGS_DTYPE
+from .type import (
+    DANBOT_MODEL_TYPE,
+    DANBOT_CATEGORY,
+    FORMAT_KWARGS_DTYPE,
+    TEMPLATE_CONFIG_DTYPE,
+)
 
 STRING_OPTIONS = {
     "multiline": True,
@@ -13,43 +18,38 @@ INPUT_TAGS_OPTIONS = {
 }
 
 
-class FormatterNodeMixin:
+class TemplateConfigNode:
     def __init__(self):
         pass
 
-    RETURN_TYPES = ("STRING", "STRING", "STRING")
+    RETURN_TYPES = (TEMPLATE_CONFIG_DTYPE, "STRING")
     RETURN_NAMES = (
-        "text_prompt",
-        "tag_template",
-        "rating_tag",
-        # "known_tags",
-        # "unknown_tags",
+        "template_config",
+        "template_name",
     )
     OUTPUT_TOOLTIPS = (
-        "Formatted prompt that should be passed to the upsampler node.",
-        "The input tags.",
-        "The rating tags detected from the input text.",
-        # "Tags that the model knows except for copyright and character tags.",
-        # "Tags that the model does not know.",
+        "The template config.",
+        "The template name.",
     )
 
-    FUNCTION = "format"
+    FUNCTION = "get_template"
 
     OUTPUT_NODE = False
 
     CATEGORY = DANBOT_CATEGORY
 
 
-class V2408FormatterNode(FormatterNodeMixin):
+class V2408TemplateConfigNode(TemplateConfigNode):
     DESCRIPTION = "Formats a prompt for a Danbot-2408 model"
 
     EXPERIMENTAL = True
+
+    RETURN_TYPES = (TEMPLATE_CONFIG_DTYPE, v2408.TEMPLATE_NAMES)
 
     @classmethod
     def INPUT_TYPES(s):
         return {
             "required": {
-                "model": (DANBOT_MODEL_TYPE,),
                 "aspect_ratio": (
                     list(v2408.ASPECT_RATIO_MAP.keys()),
                     {
@@ -74,11 +74,63 @@ class V2408FormatterNode(FormatterNodeMixin):
                         "default": "translation",
                     },
                 ),
-                "input_text": (
-                    "STRING",
+            },
+            "optional": {
+                "format_kwargs": (FORMAT_KWARGS_DTYPE,),
+            },
+        }
+
+    def get_template(
+        self,
+        aspect_ratio: str,
+        rating: str,
+        length: str,
+        template_name: v2408.TEMPLATE_NAME,
+    ):
+        config = v2408.TemplateConfig(
+            aspect_ratio=aspect_ratio,
+            rating=rating,
+            length=length,
+        )
+
+        return (config, template_name)
+
+
+class FormatterNodeMixin:
+    def __init__(self):
+        pass
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("tag_template",)
+    OUTPUT_TOOLTIPS = (
+        "Formatted tag template that should be passed to the upsampler node.",
+    )
+
+    FUNCTION = "format"
+
+    OUTPUT_NODE = False
+
+    CATEGORY = DANBOT_CATEGORY
+
+
+class V2408FormatterNode(FormatterNodeMixin):
+    DESCRIPTION = "Formats a prompt for a Danbot-2408 model"
+
+    EXPERIMENTAL = True
+
+    @classmethod
+    def INPUT_TYPES(s):
+        return {
+            "required": {
+                "model": (DANBOT_MODEL_TYPE,),
+                "template_config": (
+                    TEMPLATE_CONFIG_DTYPE,
+                    {},
+                ),
+                "template_name": (
+                    v2408.TEMPLATE_NAMES,
                     {
-                        **INPUT_TAGS_OPTIONS,
-                        "placeholder": "Natural language prompt. English and Japanese are supported.",
+                        "forceInput": True,
                     },
                 ),
             },
@@ -90,31 +142,20 @@ class V2408FormatterNode(FormatterNodeMixin):
     def format(
         self,
         model: ModelWrapper,
-        aspect_ratio: str,
-        rating: str,
-        length: str,
-        template_name: str,
-        input_text: str,
+        template_config: v2408.TemplateConfig,
+        template_name: v2408.TEMPLATE_NAME,
         format_kwargs: dict[str, str] = {},
     ):
-        parsed = model.parse_prompt(input_text)
-
-        rating_tag = v2408.RATING_MAP[parsed.rating if rating == "auto" else rating]
-
         default_kwargs = model.prompt_templates_default.get(template_name, {})
         template = model.format_prompt(
             template_name=template_name,
             format_kwargs={
-                "aspect_ratio": v2408.ASPECT_RATIO_MAP[aspect_ratio],
-                "rating": rating_tag,
-                "length": v2408.LENGTH_MAP[length],
+                "aspect_ratio": v2408.ASPECT_RATIO_MAP[template_config.aspect_ratio],
+                "rating": v2408.RATING_MAP[template_config.rating],
+                "length": v2408.LENGTH_MAP[template_config.length],
                 **default_kwargs,
                 **format_kwargs,
             },
         )
 
-        return (
-            input_text,
-            template,
-            parsed.rating,
-        )
+        return (template,)

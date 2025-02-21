@@ -80,13 +80,14 @@ class GenerationConfigNode:
                     {
                         "default": 0.0,
                         "min": 0.0,
-                        "max": 0.5,
-                        "step": 0.01,
+                        "max": 1.0,
+                        "step": 0.05,
                         "display": "number",
                         "tooltip": (
                             "Minimum probability to select tokens from. "
                             "Tokens with probability less than this value are going to be ignored. "
-                            "Default value is 0.00. Recommended to be between 0.00 and 0.05."
+                            "Default value is 0.00. If you set this value to around 0.1 ~ 0.2, "
+                            "you can set higher temperature and top_k values."
                         ),
                     },
                 ),
@@ -105,24 +106,7 @@ class GenerationConfigNode:
                         ),
                     },
                 ),
-            },
-            "optional": {
-                "guidance_scale": (
-                    "FLOAT",
-                    {
-                        "default": 1.0,
-                        "min": 1.0,
-                        "max": 4.0,
-                        "step": 0.1,
-                        "display": "number",
-                        "tooltip": (
-                            "The parameter is used for CFG guidance for text generation. "
-                            "Higher values would make the model more likely to follow the positive prompt and less likely to follow the negative prompt. "
-                            "Default value is 1.0."
-                        ),
-                    },
-                ),
-            },
+            }
         }
 
     RETURN_TYPES = (DANBOT_GENERATION_CONFIG_TYPE,)
@@ -144,7 +128,6 @@ class GenerationConfigNode:
         top_k: int,
         min_p: float,
         num_beams: int,
-        guidance_scale: float = 1.5,
     ):
         config = GenerationConfig(
             max_new_tokens=max_new_tokens,
@@ -155,6 +138,5 @@ class GenerationConfigNode:
             min_p=min_p,
             num_beams=num_beams,
             use_cache=True,
-            # guidance_scale=guidance_scale,
         )
         return (config,)

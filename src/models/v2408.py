@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import Any, Literal
 from abc import ABC
 import math
@@ -13,7 +14,7 @@ from transformers import (
     BatchFeature,
 )
 
-from .utils import ModelWrapper, EncoderDecoderTokenizer
+from .utils import ModelWrapper, EncoderDecoderTokenizer, AbstractTemplateConfig
 
 RATING_MAP = {
     "general": "<|rating:general|>",
@@ -40,6 +41,8 @@ ASPECT_RATIO_MAP = {
 }
 
 INPUT_END = "<|input_end|>"
+TRANSLATION_END = "<|reserved_6|>"
+EXTENSION_END = "</general>"
 
 COPYRIGHT_TAGS_PATTERN = re.compile(r"<copyright>(.*?)</copyright>")
 CHARACTER_TAGS_PATTERN = re.compile(r"<character>(.*?)</character>")
@@ -73,6 +76,13 @@ def aspect_ratio_tag(
         return "wide_wallpaper"
     else:
         return "too_wide"
+
+
+@dataclass
+class TemplateConfig(AbstractTemplateConfig):
+    aspect_ratio: str
+    rating: str
+    length: str
 
 
 class V2408Processor(EncoderDecoderTokenizer, ABC):
