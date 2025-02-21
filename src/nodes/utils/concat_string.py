@@ -30,15 +30,19 @@ class ConcatStringNode:
 
     def concat(
         self,
-        string_1: str = "",
-        string_2: str = "",
-        string_3: str = "",
-        string_4: str = "",
-        string_5: str = "",
-        string_6: str = "",
-        separator: str = ", ",
+        string_1: str | None = "",
+        string_2: str | None = "",
+        string_3: str | None = "",
+        string_4: str | None = "",
+        string_5: str | None = "",
+        string_6: str | None = "",
+        separator: str | None = ", ",
     ):
         strings = [string_1, string_2, string_3, string_4, string_5, string_6]
-        strings = [string.strip() for string in strings if string.strip()]
-        result = separator.join(strings)
+        strings = [
+            string.strip()
+            for string in strings
+            if isinstance(string, str) and string.strip()
+        ]
+        result = (separator or ", ").join(strings)
         return (result,)
