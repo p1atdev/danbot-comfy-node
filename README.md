@@ -1,6 +1,5 @@
-# dart-comfy-node 
+# danbot-comfy-node 
 
-TODO: add description
-
+Danbooru Tags Translator for ComfyUI
 
 
