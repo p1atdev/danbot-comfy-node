@@ -1,8 +1,8 @@
-from typing import Literal
 import os
 from pathlib import Path
 
 from ..tags import TAGS_ROOT_DIR, load_tags, normalize_tag_text
+from .type import DANBOT_CATEGORY
 
 BAN_TEMPLATE_DIR = TAGS_ROOT_DIR / "ban_template"
 
@@ -40,7 +40,7 @@ class LoadBanTagsNode:
 
     OUTPUT_NODE = False
 
-    CATEGORY = "prompt/Danbooru Tags Transformer"
+    CATEGORY = DANBOT_CATEGORY
 
     def compose(
         self,

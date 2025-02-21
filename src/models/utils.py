@@ -5,23 +5,28 @@ from pathlib import Path
 import logging
 import re
 
-from transformers import GenerationConfig, PreTrainedTokenizerBase
+from transformers import (
+    GenerationConfig,
+    PreTrainedTokenizerFast,
+    ProcessorMixin,
+)
 
 from comfy.sd1_clip import escape_important, token_weights, unescape_important
 
 from ..tags import estimate_rating, RATING_TYPE, load_tags
 
 
-MODEL_VERSIONS = Literal["v1", "v2", "v3"]
+MODEL_VERSIONS = Literal["v2408"]
 
 
 @dataclass
 class PromptParseResult:
-    copyright: str
-    character: str
-    known: str
-    unknown: str
     rating: RATING_TYPE
+
+
+class EncoderDecoderTokenizer(ProcessorMixin, ABC):
+    encoder_tokenizer: PreTrainedTokenizerFast
+    decoder_tokenizer: PreTrainedTokenizerFast
 
 
 class ModelWrapper(ABC):
@@ -31,10 +36,10 @@ class ModelWrapper(ABC):
 
     version: MODEL_VERSIONS
 
-    copyright_tags_path: str | Path
-    character_tags_path: str | Path
+    processor: EncoderDecoderTokenizer
 
-    tokenizer: PreTrainedTokenizerBase
+    prompt_templates: dict[str, str]
+    prompt_templates_default: dict[str, dict[str, str]]
 
     @abstractmethod
     def __init__(self, **kwargs):
@@ -42,63 +47,31 @@ class ModelWrapper(ABC):
 
     @abstractmethod
     def generate(
-        self, prompt: str, generation_config: GenerationConfig, **kwargs
+        self,
+        text_prompt: str,
+        tag_template: str,
+        generation_config: GenerationConfig,
+        **kwargs,
     ) -> tuple[str, str, str]:
         raise NotImplementedError
 
     @abstractmethod
-    def format_prompt(self, format_kwargs: dict[str, str]) -> str:
+    def format_prompt(self, template_name: str, format_kwargs: dict[str, str]) -> str:
         raise NotImplementedError
 
-    def parse_prompt(self, prompt: str, escape_brackets: bool) -> PromptParseResult:
-        copyright_list = load_tags(self.copyright_tags_path)
-        character_list = load_tags(self.character_tags_path)
-        vocab_list = list(self.tokenizer.get_vocab().keys())
-        special_list = self.tokenizer.all_special_tokens
+    def parse_prompt(self, prompt: str) -> PromptParseResult:
+        tags = split_tokens(prompt)  # split by commas
 
-        if escape_brackets:
-            tags = unescape_important_all(prompt)  # remove (brackets:1.5)
-        else:
-            tags = split_tokens(prompt)  # split by commas
-
-        found_copyright_tags = []
-        found_character_tags = []
-        found_known_tags = []
-        unknown_tags = []
-
-        for tag in tags:
-            if tag in copyright_list:
-                found_copyright_tags.append(tag)
-                continue
-            if tag in character_list:
-                found_character_tags.append(tag)
-                continue
-
-            if tag in special_list:
-                logging.warning(f"Special tag found: {tag} (skipped)")
-                continue
-
-            if tag not in vocab_list:
-                logging.warning(f"Unknown tag found: {tag} (skipped)")
-                unknown_tags.append(tag)
-                continue
-
-            found_known_tags.append(tag)
-
-        rating = estimate_rating(unknown_tags)
+        rating = estimate_rating(tags)
 
         return PromptParseResult(
-            copyright=", ".join(found_copyright_tags),
-            character=", ".join(found_character_tags),
-            known=", ".join(found_known_tags),
-            unknown=", ".join(unknown_tags),
             rating=rating,
         )
 
     def encode_ban_tags(self, ban_tags: str) -> list[list[int]] | None:
         # wildcard tags support
         tags = [tag.strip() for tag in ban_tags.split(",")]
-        vocab = self.tokenizer.get_vocab()
+        vocab = self.processor.decoder_tokenizer.get_vocab()
 
         ban_token_ids: list[list[int]] = []
         for tag in tags:  # search tags in vocab
@@ -115,6 +88,21 @@ class ModelWrapper(ABC):
             return None
 
         return ban_token_ids
+
+    def search_tags(self, text: str, pattern: re.Pattern) -> str:
+        result = pattern.search(text)
+        if result is None:
+            return ""
+        tags = [tag.strip() for tag in result.group(1).split(",") if tag.strip()]
+        return ", ".join(tags)
+
+    @abstractmethod
+    def extract_translation_result(self, raw_output: str) -> dict[str, str]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def extract_extension_result(self, raw_output: str) -> dict[str, str]:
+        raise NotImplementedError
 
 
 def unescape_important_all(text: str) -> list[str]:

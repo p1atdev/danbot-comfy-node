@@ -6,9 +6,9 @@ import { ComfyWidgets } from "../../../scripts/widgets.js";
 
 // Displays input text on a node
 app.registerExtension({
-    name: "dart-comfy-node.PrintString",
+    name: "danbot-comfy-node.PrintString",
     async beforeRegisterNodeDef(nodeType, nodeData, app) {
-        if (nodeData.name === "DartUtilsPrintString") {
+        if (nodeData.name === "DanbotUtilsPrintString") {
             function populate(text) {
                 if (this.widgets) {
                     for (let i = 1; i < this.widgets.length; i++) {

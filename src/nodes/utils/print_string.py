@@ -1,3 +1,6 @@
+from ..type import DANBOT_CATEGORY
+
+
 class PrintStringNode:
     def __init__(self):
         pass
@@ -16,7 +19,7 @@ class PrintStringNode:
 
     OUTPUT_NODE = True
 
-    CATEGORY = "prompt/Danbooru Tags Transformer/utils"
+    CATEGORY = DANBOT_CATEGORY + "/utils"
     DESCRIPTION = "Prints the input string to the console."
 
     def print_string(self, input_string=None):

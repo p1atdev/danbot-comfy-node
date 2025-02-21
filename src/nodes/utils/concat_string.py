@@ -1,3 +1,6 @@
+from ..type import DANBOT_CATEGORY
+
+
 class ConcatStringNode:
     def __init__(self):
         pass
@@ -22,7 +25,7 @@ class ConcatStringNode:
 
     OUTPUT_NODE = False
 
-    CATEGORY = "prompt/Danbooru Tags Transformer/utils"
+    CATEGORY = DANBOT_CATEGORY + "/utils"
     DESCRIPTION = "Concats the input strings."
 
     def concat(

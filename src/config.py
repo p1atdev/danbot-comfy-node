@@ -27,11 +27,11 @@ class ModelConfig:
         model_cls = MODEL_VERSION_TO_CLASS[self.version]
         prompt_templates = load_prompt_templates()
         prompt_template = prompt_templates[self.prompt_template_id]
-        return model_cls(prompt_template=prompt_template, **self.data)
+        return model_cls(prompt_templates=prompt_template, **self.data)
 
 
-# id: str pair
-PromptTemplates = dict[str, str]
+# id: dict[name, template] pair
+PromptTemplates = dict[str, dict[str, str]]
 
 
 def load_models_configs() -> dict[str, ModelConfig]:
@@ -50,7 +50,10 @@ def load_models_configs() -> dict[str, ModelConfig]:
 
 def load_prompt_templates() -> PromptTemplates:
     with open(PROMPT_TEMPLATE_CONFIG_FILE_PATH, "r") as file:
-        config: dict[str, str] = yaml.safe_load(file)
+        config: dict[str, dict[str, str]] = yaml.safe_load(file)
 
     # remove all newlines
-    return {id: template.replace("\n", "") for id, template in config.items()}
+    return {
+        id: {name: template.replace("\n", "") for name, template in templates.items()}
+        for id, templates in config.items()
+    }

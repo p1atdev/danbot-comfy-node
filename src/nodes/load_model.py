@@ -1,9 +1,9 @@
 from ..config import load_models_configs
-from .type import DART_MODEL_TYPE
+from .type import DANBOT_MODEL_TYPE, DANBOT_CATEGORY
 
 
 class LoadModelNode:
-    DESCRIPTION = "Loads a Dart model."
+    DESCRIPTION = "Loads a Danbot model."
 
     def __init__(self):
         pass
@@ -17,15 +17,15 @@ class LoadModelNode:
             },
         }
 
-    RETURN_TYPES = (DART_MODEL_TYPE,)
-    RETURN_NAMES = ("dart_model",)
-    OUTPUT_TOOLTIPS = ("Dart model",)
+    RETURN_TYPES = (DANBOT_MODEL_TYPE,)
+    RETURN_NAMES = ("danbot_model",)
+    OUTPUT_TOOLTIPS = ("Danbot model",)
 
     FUNCTION = "load_model"
 
     OUTPUT_NODE = False
 
-    CATEGORY = "prompt/Danbooru Tags Transformer"
+    CATEGORY = DANBOT_CATEGORY
 
     def load_model(self, model_name: str):
         configs = load_models_configs()

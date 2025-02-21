@@ -2,7 +2,7 @@ from typing import Literal
 
 from transformers import GenerationConfig
 
-from .type import DART_GENERATION_CONFIG_TYPE
+from .type import DANBOT_GENERATION_CONFIG_TYPE, DANBOT_CATEGORY
 
 
 class GenerationConfigNode:
@@ -125,7 +125,7 @@ class GenerationConfigNode:
             },
         }
 
-    RETURN_TYPES = (DART_GENERATION_CONFIG_TYPE,)
+    RETURN_TYPES = (DANBOT_GENERATION_CONFIG_TYPE,)
     RETURN_NAMES = ("generation_config",)
     OUTPUT_TOOLTIPS = ("Generation config for the upsampler node.",)
 
@@ -133,7 +133,7 @@ class GenerationConfigNode:
 
     OUTPUT_NODE = False
 
-    CATEGORY = "prompt/Danbooru Tags Transformer"
+    CATEGORY = DANBOT_CATEGORY
 
     def construct(
         self,
@@ -155,6 +155,6 @@ class GenerationConfigNode:
             min_p=min_p,
             num_beams=num_beams,
             use_cache=True,
-            guidance_scale=guidance_scale,
+            # guidance_scale=guidance_scale,
         )
         return (config,)

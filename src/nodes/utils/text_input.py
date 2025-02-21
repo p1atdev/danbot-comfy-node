@@ -1,3 +1,6 @@
+from ..type import DANBOT_CATEGORY
+
+
 class TextInputNode:
     def __init__(self):
         pass
@@ -19,7 +22,7 @@ class TextInputNode:
 
     FUNCTION = "passthrough"
 
-    CATEGORY = "prompt/Danbooru Tags Transformer/utils"
+    CATEGORY = DANBOT_CATEGORY + "/utils"
     DESCRIPTION = (
         "Just pass the given text to the next nodes without any transformation."
     )
