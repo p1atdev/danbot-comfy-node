@@ -130,7 +130,7 @@ class V2408PipelineNode:
 
         # 2. extend
         copyright_tags = translation.get("copyright", "")
-        character_tags = translation.get("characters", "")
+        character_tags = translation.get("character", "")
         translation_tags = translation.get("translation", "")
 
         extension_template = danbot_model.format_prompt(
