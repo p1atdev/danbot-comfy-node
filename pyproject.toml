@@ -1,15 +1,19 @@
 [project]
-name = "dart-comfy-node"
-description = "Upsamples danbooru tags using Dart models."
+name = "danbot-comfy-node"
+description = "Translate and extend danbooru tags using Danbot models."
 version = "0.1.0"
 license = { file = "LICENSE" }
-dependencies = ["optimum[onnxruntime]"]
+dependencies = [
+    "protobuf>=5.29.3",
+    "sentencepiece>=0.2.0",
+    "transformers>=4.49.0",
+]
 
 [project.urls]
-Repository = "https://github.com/p1atdev/dart-comfy-node"
+Repository = "https://github.com/p1atdev/danbot-comfy-node"
 #  Used by Comfy Registry https://comfyregistry.org
 
 [tool.comfy]
 PublisherId = "p1atdev"
-DisplayName = "dart-comfy-node"
+DisplayName = "danbot-comfy-node"
 Icon = ""
