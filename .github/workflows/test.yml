@@ -7,14 +7,14 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        workflow_name: ["workflow1.json", "workflow2.json", "another_workflow.json"]
+        workflow_name: ["workflows/Translation+Extension.json", "workflows/Translation+Extension.json"]
     runs-on: ${{ matrix.os }}
     env:
       MODEL_URL: https://huggingface.co/cagliostrolab/animagine-xl-4.0/resolve/main/animagine-xl-4.0-opt.safetensors
 
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup ComfyUI
         uses: Comfy-Org/comfy-action@main
@@ -36,7 +36,7 @@ jobs:
         run: python action.py --comfy-workflow-names="${{ matrix.workflow_name }}" --os="${{ matrix.os }}"
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: comfyui-output-${{ matrix.os }}
           path: output
