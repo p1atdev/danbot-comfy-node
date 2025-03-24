@@ -1,0 +1,663 @@
+{
+  "id": "97a299e7-57c8-4294-9800-a39a86f7b4b3",
+  "revision": 0,
+  "last_node_id": 20,
+  "last_link_id": 29,
+  "nodes": [
+    {
+      "id": 15,
+      "type": "DanbotV2408TemplateConfigNode",
+      "pos": [
+        1483.2630615234375,
+        2522.86181640625
+      ],
+      "size": [
+        319.1500244140625,
+        170
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "format_kwargs",
+          "shape": 7,
+          "type": "DANBOT_FORMAT_KWARGS",
+          "link": null
+        },
+        {
+          "name": "aspect_ratio",
+          "type": "COMBO",
+          "widget": {
+            "name": "aspect_ratio"
+          },
+          "link": null
+        },
+        {
+          "name": "aspect_ratio",
+          "type": "COMBO",
+          "widget": {
+            "name": "aspect_ratio"
+          },
+          "link": 25
+        }
+      ],
+      "outputs": [
+        {
+          "name": "template_config",
+          "type": "DANBOT_TEMPLATE_CONFIG",
+          "slot_index": 0,
+          "links": [
+            11,
+            17
+          ]
+        },
+        {
+          "name": "template_name",
+          "type": "COMBO",
+          "slot_index": 1,
+          "links": []
+        }
+      ],
+      "title": "Translation config",
+      "properties": {
+        "Node name for S&R": "DanbotV2408TemplateConfigNode"
+      },
+      "widgets_values": [
+        "tall",
+        "general",
+        "very_short",
+        "translation"
+      ]
+    },
+    {
+      "id": 20,
+      "type": "DanbotV2408AutoAspectRatioTag",
+      "pos": [
+        1125.9580078125,
+        2681.9013671875
+      ],
+      "size": [
+        285.6000061035156,
+        122
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "aspect_ratio_tag",
+          "type": "COMBO",
+          "links": [
+            25,
+            26
+          ]
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "links": []
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DanbotV2408AutoAspectRatioTag"
+      },
+      "widgets_values": [
+        832,
+        1152
+      ]
+    },
+    {
+      "id": 1,
+      "type": "DanbotUtilsConcatString",
+      "pos": [
+        2737.31396484375,
+        2464.869384765625
+      ],
+      "size": [
+        300.4800109863281,
+        302
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "string_1",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "string_1"
+          },
+          "link": null
+        },
+        {
+          "name": "string_2",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "string_2"
+          },
+          "link": null
+        },
+        {
+          "name": "string_3",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "string_3"
+          },
+          "link": null
+        },
+        {
+          "name": "string_4",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "string_4"
+          },
+          "link": null
+        },
+        {
+          "name": "string_5",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "string_5"
+          },
+          "link": null
+        },
+        {
+          "name": "string_6",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "string_6"
+          },
+          "link": 16
+        },
+        {
+          "name": "string_1",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "string_1"
+          },
+          "link": 20
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "slot_index": 0,
+          "links": [
+            6
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DanbotUtilsConcatString"
+      },
+      "widgets_values": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ", "
+      ]
+    },
+    {
+      "id": 16,
+      "type": "DanbotV2408TemplateConfigNode",
+      "pos": [
+        1834.2733154296875,
+        2528.31640625
+      ],
+      "size": [
+        313.6499938964844,
+        150
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "format_kwargs",
+          "shape": 7,
+          "type": "DANBOT_FORMAT_KWARGS",
+          "link": null
+        },
+        {
+          "name": "aspect_ratio",
+          "type": "COMBO",
+          "widget": {
+            "name": "aspect_ratio"
+          },
+          "link": 26
+        }
+      ],
+      "outputs": [
+        {
+          "name": "template_config",
+          "type": "DANBOT_TEMPLATE_CONFIG",
+          "slot_index": 0,
+          "links": [
+            12,
+            18
+          ]
+        },
+        {
+          "name": "template_name",
+          "type": "COMBO",
+          "slot_index": 1,
+          "links": []
+        }
+      ],
+      "title": "Extension config",
+      "properties": {
+        "Node name for S&R": "DanbotV2408TemplateConfigNode"
+      },
+      "widgets_values": [
+        "tall",
+        "general",
+        "long",
+        "extension"
+      ]
+    },
+    {
+      "id": 8,
+      "type": "DanbotUtilsPrintString",
+      "pos": [
+        3068.317138671875,
+        2453.749755859375
+      ],
+      "size": [
+        329.52001953125,
+        229.1075897216797
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "input_string",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "input_string"
+          },
+          "link": 6
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "Generated tags with quality tags",
+      "properties": {
+        "Node name for S&R": "DanbotUtilsPrintString"
+      },
+      "widgets_values": [
+        "",
+        "1girl, solo, blue background, halftone background, looking at viewer, animal ears, school uniform, yellow eyes, black hair, long hair, sitting, crossed legs, cat ears, border, halftone, white border, couch, shirt, skirt, closed mouth, very long hair, short sleeves, white shirt, black skirt, pleated skirt, serafuku, black sailor collar, socks, white socks, outside border, sailor collar, masterpiece, best quality, high score, great score, latest"
+      ],
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 6,
+      "type": "DanbotGenerationConfig",
+      "pos": [
+        1784.31298828125,
+        2746.008544921875
+      ],
+      "size": [
+        315,
+        202
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "generation_config",
+          "type": "DANBOT_GENERATION_CONFIG",
+          "slot_index": 0,
+          "links": [
+            13,
+            21
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DanbotGenerationConfig"
+      },
+      "widgets_values": [
+        256,
+        "true",
+        1,
+        1,
+        50,
+        0.05,
+        1
+      ]
+    },
+    {
+      "id": 18,
+      "type": "DanbotUtilsTextInput",
+      "pos": [
+        1762.7659912109375,
+        3009.739990234375
+      ],
+      "size": [
+        336.8819885253906,
+        182.83450317382812
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "slot_index": 0,
+          "links": [
+            22
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DanbotUtilsTextInput"
+      },
+      "widgets_values": [
+        "猫耳で黒髪ロング、制服を着ており、目は黄色の少女。背景はハーフトーンのついた青で、白枠が付いている。ソファーに座って足を組みながらこっちを見ている。"
+      ],
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 17,
+      "type": "DanbotUtilsTextInput",
+      "pos": [
+        2332.1572265625,
+        2800.824462890625
+      ],
+      "size": [
+        268.7149963378906,
+        130.4250030517578
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "slot_index": 0,
+          "links": [
+            16
+          ]
+        }
+      ],
+      "title": "Quality tags",
+      "properties": {
+        "Node name for S&R": "DanbotUtilsTextInput"
+      },
+      "widgets_values": [
+        "masterpiece, best quality, high score, great score, latest"
+      ]
+    },
+    {
+      "id": 9,
+      "type": "DanbotLoadModel",
+      "pos": [
+        1130.7950439453125,
+        2390.42626953125
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "danbot_model",
+          "type": "DANBOT_MODEL",
+          "slot_index": 0,
+          "links": [
+            7,
+            19
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DanbotLoadModel"
+      },
+      "widgets_values": [
+        "DanbotNL 2408 260M"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 19,
+      "type": "DanbotV2408PipelineNode",
+      "pos": [
+        2325.0859375,
+        2462.9833984375
+      ],
+      "size": [
+        362.79998779296875,
+        190
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "danbot_model",
+          "type": "DANBOT_MODEL",
+          "link": 19
+        },
+        {
+          "name": "translation_template_config",
+          "shape": 7,
+          "type": "DANBOT_TEMPLATE_CONFIG",
+          "link": 17
+        },
+        {
+          "name": "extension_template_config",
+          "shape": 7,
+          "type": "DANBOT_TEMPLATE_CONFIG",
+          "link": 18
+        },
+        {
+          "name": "generation_config",
+          "shape": 7,
+          "type": "DANBOT_GENERATION_CONFIG",
+          "link": 21
+        },
+        {
+          "name": "text_prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "text_prompt"
+          },
+          "link": 22
+        },
+        {
+          "name": "ban_tags",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "ban_tags"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "generated_tags",
+          "type": "STRING",
+          "links": [
+            20
+          ]
+        },
+        {
+          "name": "translated_tags",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "extended_tags",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "raw_output",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DanbotV2408PipelineNode"
+      },
+      "widgets_values": [
+        "",
+        347414205,
+        "fixed",
+        ""
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    }
+  ],
+  "links": [
+    [
+      6,
+      1,
+      0,
+      8,
+      0,
+      "STRING"
+    ],
+    [
+      16,
+      17,
+      0,
+      1,
+      5,
+      "STRING"
+    ],
+    [
+      17,
+      15,
+      0,
+      19,
+      1,
+      "DANBOT_TEMPLATE_CONFIG"
+    ],
+    [
+      18,
+      16,
+      0,
+      19,
+      2,
+      "DANBOT_TEMPLATE_CONFIG"
+    ],
+    [
+      19,
+      9,
+      0,
+      19,
+      0,
+      "DANBOT_MODEL"
+    ],
+    [
+      20,
+      19,
+      0,
+      1,
+      6,
+      "STRING"
+    ],
+    [
+      21,
+      6,
+      0,
+      19,
+      3,
+      "DANBOT_GENERATION_CONFIG"
+    ],
+    [
+      22,
+      18,
+      0,
+      19,
+      4,
+      "STRING"
+    ],
+    [
+      25,
+      20,
+      0,
+      15,
+      2,
+      "COMBO"
+    ],
+    [
+      26,
+      20,
+      0,
+      16,
+      1,
+      "COMBO"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 2,
+      "title": "Prompt Generation",
+      "bounding": [
+        1104.904541015625,
+        2292.62646484375,
+        2319.90576171875,
+        946.2933349609375
+      ],
+      "color": "#3f789e",
+      "font_size": 22,
+      "flags": {
+        "pinned": true
+      }
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.8264462809917354,
+      "offset": [
+        -1486.5471188289828,
+        -2258.818673081036
+      ]
+    }
+  },
+  "version": 0.4
+}

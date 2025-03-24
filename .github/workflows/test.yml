@@ -1,0 +1,42 @@
+name: Test ComfyUI Workflows
+
+on: [push, pull_request]
+
+jobs:
+  test-comfyui:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        workflow_name: ["workflow1.json", "workflow2.json", "another_workflow.json"]
+    runs-on: ${{ matrix.os }}
+    env:
+      MODEL_URL: https://huggingface.co/cagliostrolab/animagine-xl-4.0/resolve/main/animagine-xl-4.0-opt.safetensors
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Setup ComfyUI
+        uses: Comfy-Org/comfy-action@main
+
+      - name: Download models
+        run: |
+          mkdir -p ./models/checkpoints
+          if [[ "${{ runner.os }}" == "Linux" ]]; then
+            wget -P ./models/checkpoints "$MODEL_URL"
+          elif [[ "${{ runner.os }}" == "Windows" ]]; then
+            # PowerShell
+            $fileName = Split-Path $url -Leaf
+            Invoke-WebRequest -Uri "$MODEL_URL" -OutFile $fileName
+          elif]; then
+            wget -P ./models/checkpoints "$MODEL_URL"
+          fi
+
+      - name: Run ComfyUI worflows
+        run: python action.py --comfy-workflow-names="${{ matrix.workflow_name }}" --os="${{ matrix.os }}"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: comfyui-output-${{ matrix.os }}
+          path: output

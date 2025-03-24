@@ -16,4 +16,4 @@ Repository = "https://github.com/p1atdev/danbot-comfy-node"
 [tool.comfy]
 PublisherId = "p1atdev"
 DisplayName = "danbot-comfy-node"
-Icon = ""
+Icon = "https://raw.githubusercontent.com/p1atdev/danbot-comfy-node/refs/heads/main/assets/icon.png"
