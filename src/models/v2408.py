@@ -14,7 +14,12 @@ from transformers import (
     BatchFeature,
 )
 
-from .utils import ModelWrapper, EncoderDecoderTokenizer, AbstractTemplateConfig
+from .utils import (
+    ModelWrapper,
+    EncoderDecoderTokenizer,
+    AbstractTemplateConfig,
+    is_flash_attn_available,
+)
 
 RATING_MAP = {
     "general": "<|rating:general|>",
@@ -46,8 +51,8 @@ EXTENSION_END = "</general>"
 
 COPYRIGHT_TAGS_PATTERN = re.compile(r"<copyright>(.*?)</copyright>")
 CHARACTER_TAGS_PATTERN = re.compile(r"<character>(.*?)</character>")
-TRANSLATION_TAGS_PATTERN = re.compile(r"<\|reserved_5\|>(.*?)<\|reserved_6\|>")
-EXTENSION_TAGS_PATTERN = re.compile(r"<\|reserved_7\|>(.*?)<\|reserved_8\|>")
+TRANSLATION_TAGS_PATTERN = re.compile(r"<translation>(.*?)</translation>")
+EXTENSION_TAGS_PATTERN = re.compile(r"<extension>(.*?)</extension>")
 
 TEMPLATE_NAME = Literal["translation", "extension"]
 TEMPLATE_NAMES = ["translation", "extension"]
@@ -121,12 +126,20 @@ class V2408Model(ModelWrapper):
         revision: str | None = None,
         trust_remote_code: bool = False,
     ):
+        load_device = self._get_device()
+
         self.model = AutoModelForPreTraining.from_pretrained(
             model_name_or_path,
             revision=revision,
             torch_dtype=torch.bfloat16,
             trust_remote_code=trust_remote_code,
+            attn_implementation=(
+                "flash_attention_2"
+                if (is_flash_attn_available() and load_device.type == "cuda")
+                else "sdpa"
+            ),
         )
+        self.model.to(load_device)  # type: ignore
         self.model.eval()
         self.processor = AutoProcessor.from_pretrained(
             model_name_or_path,

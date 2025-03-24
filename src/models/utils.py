@@ -1,10 +1,12 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Literal, NamedTuple
+from typing import Literal
+from enum import Enum
 from pathlib import Path
 import logging
 import re
 
+import torch
 from transformers import (
     GenerationConfig,
     PreTrainedTokenizerFast,
@@ -12,9 +14,9 @@ from transformers import (
 )
 
 from comfy.sd1_clip import escape_important, token_weights, unescape_important
+from comfy.model_management import get_torch_device_name, get_torch_device
 
 from ..tags import estimate_rating, RATING_TYPE, load_tags
-
 
 MODEL_VERSIONS = Literal["v2408"]
 
@@ -49,6 +51,9 @@ class ModelWrapper(ABC):
     @abstractmethod
     def __init__(self, **kwargs):
         raise NotImplementedError
+
+    def _get_device(self) -> torch.device:
+        return get_torch_device()
 
     @abstractmethod
     def generate(
@@ -133,3 +138,18 @@ def split_tokens(text: str, separator: str = ",") -> list[str]:
     Split text into tokens without prefix and suffix spaces
     """
     return [token.strip() for token in text.split(separator) if token.strip()]
+
+
+def is_flash_attn_available():
+    try:
+        from flash_attn import flash_attn_func  # type: ignore
+
+        logging.info("Flash Attention is available")
+
+        return True
+    except ImportError:
+        # not installed
+        return False
+    except Exception as e:
+        logging.error(f"Flash Attention is not available: {e}")
+        return False
