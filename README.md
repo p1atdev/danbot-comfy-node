@@ -12,9 +12,7 @@ This custom node allows you to convert natural language prompts in Japanese and 
 cd custom_nodes
 git clone https://github.com/p1atdev/danbot-comfy-node
 cd danbot-comfy-node
-pip install sentencepiece protobuf
-# or if you are using uv, you can:
-# uv pip install -r ./pyproject.toml
+pip install -r requirements.txt
 ```
 
 ### ComfyUI Registry

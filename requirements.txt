@@ -1,0 +1,3 @@
+protobuf
+sentencepiece
+transformers>=4.49.0

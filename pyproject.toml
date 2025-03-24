@@ -1,7 +1,7 @@
 [project]
 name = "danbot-comfy-node"
 description = "Translate and extend danbooru tags using Danbot models."
-version = "0.1.0"
+version = "0.1.1"
 license = { file = "LICENSE" }
 dependencies = [
     "protobuf>=6.30.1",
