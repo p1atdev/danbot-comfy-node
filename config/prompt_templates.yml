@@ -1,38 +1,39 @@
 # newlines are removed when loading
-V1_SFT: |-
-  <|bos|>
-  <rating>{rating}</rating>
-  <copyright>{copyright}</copyright>
-  <character>{character}</character>
-  {length}
-  <general>{condition}<|input_end|>
 
-V2_SFT: |-
-  <|bos|>
-  <copyright>{copyright}</copyright>
-  <character>{character}</character>
-  {rating}{aspect_ratio}{length}
-  <general>{condition}{identity}<|input_end|>
+v2408-dev:
+  translation: |-
+    <|bos|>
+    {rating}{aspect_ratio}{length}
+    <|reserved_2|><|reserved_3|><|reserved_4|>
+    <|translate:exact|><|input_end|>
+    <copyright>
 
-V3_USE: |-
-  <|bos|>
-  {rating}{aspect_ratio}{length}
-  <copyright>{copyright}</copyright>
-  <character>{character}</character>
-  <use>{condition}</use>
-  <general><|input_end|>
-  <group>{condition}</group>
+  extension: |-
+    <|bos|>
+    {rating}{aspect_ratio}{length}
+    <|reserved_2|><|reserved_3|><|reserved_4|>
+    <|translate:approx|><|input_end|>
+    <copyright>{copyright}</copyright>
+    <character>{character}</character>
+    <general>
+    <|reserved_5|>{translation}<|reserved_6|>
+    <|reserved_7|>
 
-V3_SFT: |-
-  <|bos|>
-  {rating}{aspect_ratio}{length}
-  <copyright>{copyright}</copyright>
-  <character>{character}</character>
-  <general>{condition}<|input_end|>
+v2408:
+  translation: |-
+    <|bos|>
+    {rating}{aspect_ratio}{length}
+    <text><|text|></text>
+    <|translate:exact|><|input_end|>
+    <copyright>
 
-V3_PRETRAIN: |-
-  <|bos|>
-  {rating}{aspect_ratio}{length}
-  <copyright>{copyright}</copyright>
-  <character>{character}</character>
-  <general>{condition}
+  extension: |-
+    <|bos|>
+    {rating}{aspect_ratio}{length}
+    <text><|text|></text>
+    <|translate:approx|><|input_end|>
+    <copyright>{copyright}</copyright>
+    <character>{character}</character>
+    <general>
+    <translation>{translation}</translation>
+    <extension>
