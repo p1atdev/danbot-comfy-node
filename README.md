@@ -19,7 +19,9 @@ pip install sentencepiece protobuf
 
 ### ComfyUI Registry
 
-TODO
+```
+comfy node registry-install danbot-comfy-node
+```
 
 ## Example Workflows
 
