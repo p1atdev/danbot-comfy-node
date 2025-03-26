@@ -8,11 +8,20 @@ This custom node allows you to convert natural language prompts in Japanese and 
 ### Manual Installation
 
 ```bash
-# activate your env
+# activate your python env
 cd custom_nodes
 git clone https://github.com/p1atdev/danbot-comfy-node
 cd danbot-comfy-node
 pip install -r requirements.txt
+```
+
+If you are using portable ComfyUI, use `your/ComfyUI_windows_portable/python_embeded/python.exe -s -m pip` intead of `pip`. For example:
+
+```bash
+cd custom_nodes
+git clone https://github.com/p1atdev/danbot-comfy-node
+cd danbot-comfy-node
+../../../python_embeded/python.exe -s -m pip install -r requirements.txt
 ```
 
 ### ComfyUI Registry
