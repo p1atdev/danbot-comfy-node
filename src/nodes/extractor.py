@@ -1,8 +1,5 @@
 from ..models.utils import ModelWrapper
-from .type import (
-    DANBOT_MODEL_TYPE,
-    FORMAT_KWARGS_DTYPE,
-)
+from .type import DANBOT_MODEL_TYPE, FORMAT_KWARGS_DTYPE, DANBOT_CATEGORY
 
 
 class TranslationExtractorNode:
@@ -26,6 +23,8 @@ class TranslationExtractorNode:
     OUTPUT_TOOLIPS = ("The extracted translation tags as a dict",)
 
     FUNCTION = "extract"
+
+    CATEGORY = DANBOT_CATEGORY
 
     def extract(
         self,
@@ -58,6 +57,8 @@ class ExtensionExtractorNode:
     OUTPUT_TOOLIPS = ("The extracted extension tags as a dict",)
 
     FUNCTION = "extract"
+
+    CATEGORY = DANBOT_CATEGORY
 
     def extract(
         self,

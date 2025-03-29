@@ -75,9 +75,6 @@ class V2408TemplateConfigNode(TemplateConfigNode):
                     },
                 ),
             },
-            "optional": {
-                "format_kwargs": (FORMAT_KWARGS_DTYPE,),
-            },
         }
 
     def get_template(
